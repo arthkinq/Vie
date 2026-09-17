@@ -5,6 +5,7 @@
 - **Репозиторий:** https://github.com/arthkinq/Vie
 - **Таск-трекер:** https://github.com/users/arthkinq/projects/4
 - **Figma mood board:** https://www.figma.com/design/RGtTFiKy4XuldtptDkBGrt/Untitled?node-id=2-3&t=ORyeURrubKocK7Py-1
+- **User & Data flow:** https://www.figma.com/design/stKbFwJKHEW67ln7teMQUD/G1.1-%E2%80%94-User-Flow?node-id=7-3&t=08FVfEL1L2we1hY8-1
 
 ---
 
