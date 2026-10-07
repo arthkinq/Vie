@@ -9,3 +9,5 @@ test('user can open the catalog from the main page', async ({ page }) => {
   await expect(page).toHaveURL(/\/catalog$/)
   await expect(page.getByRole('heading', { name: 'Каталог' })).toBeVisible()
 })
+
+// Verified e2e pipeline for G3.2
