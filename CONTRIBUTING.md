@@ -16,3 +16,5 @@ npm run format:check
 npm test
 npm run test:e2e
 ```
+
+<!-- For G3.0: Rules of contribution verified! -->
