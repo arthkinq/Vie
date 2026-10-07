@@ -6,6 +6,7 @@ import './index.css'
 
 const { Header, Content } = Layout
 
+const unusedVariable = 42;
 export default function App() {
   return (
     <Layout className="layout">
