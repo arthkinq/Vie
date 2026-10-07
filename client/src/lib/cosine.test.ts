@@ -18,3 +18,5 @@ describe('cosineSimilarity', () => {
     expect(() => cosineSimilarity([1], [1, 2])).toThrow()
   })
 })
+
+  it('handles negative vectors correctly', () => { expect(cosineSimilarity([-1, 0], [1, 0])).toBe(-1) })
