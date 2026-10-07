@@ -4,7 +4,7 @@
 
 - Репозиторий: <https://github.com/arthkinq/Vie>
 - Таск-трекер: <https://github.com/users/arthkinq/projects/4>
-- Макеты: <https://www.figma.com/design/RGtTFiKy4XuldtptDkBGrt/Untitled?node-id=2-3&t=ORyeURrubKocK7Py-1>
+- Макеты: <https://www.figma.com/design/pWuSJMtV6MOwEvCccO0vfv/web-design?node-id=531-2469&p=f&t=cilWwwbsHfQdqocZ-0>
 
 ## Что умеет приложение
 
