@@ -4,7 +4,7 @@
 
 - Репозиторий: <https://github.com/arthkinq/Vie>
 - Таск-трекер: <https://github.com/users/arthkinq/projects/4>
-- Макеты: <https://www.figma.com/design/RGtTFiKy4XuldtptDkBGrt/Untitled?node-id=2-3&t=ORyeURrubKocK7Py-1>
+- Макеты: <https://www.figma.com/design/5ntpPvWoYsYVSAqyhdnwxb/web-design--Copy-?node-id=0-1&t=C1ZVekFI21fSmAnp-1>
 
 ## Что умеет приложение
 
@@ -35,6 +35,23 @@
 | База данных | SQLite |
 | Запуск | Docker Compose, `make run` |
 | Аналитика и ошибки | Яндекс.Метрика, Sentry |
+
+### Описание архитектуры и взаимодействия
+
+* **Модули и технологии:**
+  * **Клиент:** React, Vite, Redux Toolkit, React Router, Ant Design. Отвечает за интерфейс, навигацию и состояние приложения.
+  * **Web Worker:** изолированный фоновый поток для расчёта рекомендаций без блокировки интерфейса.
+  * **Canvas 2D:** генерация изображения ретро-билета средствами Canvas API.
+  * **Сервер (Node.js):** сервис на Express и TypeScript, реализующий REST API (контракт OpenAPI) и авторизацию по JWT.
+  * **База данных:** SQLite для хранения пользователей, оценок и каталога фильмов.
+  * **Мониторинг:** Sentry (логирование ошибок) и Яндекс.Метрика (аналитика).
+
+* **Связи и протоколы:**
+  * **SPA ↔ Web Worker (`postMessage`):** передача оценок пользователя в воркер и получение отсортированного списка рекомендаций.
+  * **SPA → Canvas 2D (`Canvas API`):** вызовы контекста отрисовки и сохранение билета в PNG.
+  * **SPA ↔ Сервер (`HTTP / REST (JSON)`):** получение каталога, отправка оценок и авторизация (заголовок `Authorization: Bearer <JWT>`).
+  * **Сервер ↔ БД (`SQL`):** сохранение и выборка данных.
+  * **SPA → Sentry / Метрика (`HTTPS`):** асинхронная отправка ошибок и аналитики.
 
 ## CI и правила работы с репозиторием
 
