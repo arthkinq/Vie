@@ -16,7 +16,7 @@ export default function App() {
           selectable={false}
           items={[
             { key: 'home', label: <Link to="/">Главная</Link> },
-            { key: 'catalog', label: <Link to="/catalog">Каталог</Link> },
+            { key: 'catalog', label: <Link to="/catalog">Фильмотека</Link> },
           ]}
         />
       </Header>
