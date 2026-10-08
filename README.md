@@ -30,11 +30,14 @@
 | E2E-тесты | Playwright |
 | Качество кода | ESLint, Prettier, Stylelint |
 | CI | GitHub Actions |
-| Web Worker и Canvas API | рекомендации и генератор билетов |
+| Многопоточность | Web Worker (рекомендации) |
+| Графика | Canvas API (генератор билетов) |
 | Сервер | Node.js, Express, TypeScript, REST API (OpenAPI), JWT |
 | База данных | SQLite |
 | Запуск | Docker Compose, `make run` |
 | Аналитика и ошибки | Яндекс.Метрика, Sentry |
+
+*Сервер, база данных, Docker, Web Worker, Canvas, Sentry и Метрика пока не начаты*
 
 ### Описание архитектуры и взаимодействия
 
