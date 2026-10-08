@@ -9,10 +9,12 @@
 5. Мержим только когда CI зелёный: `lint`, `unit`, `coverage` (минимум 80%), `e2e`.
 
 Перед PR локально, из папки `client`:
-
-```
+```bash
 npm run lint
 npm run format:check
+npm run stylelint
 npm test
+npm run test:coverage
 npm run test:e2e
+npx playwright install chromium  # только один раз при первой установке
 ```
