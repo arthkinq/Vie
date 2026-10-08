@@ -1,0 +1,56 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+skinparam defaultTextAlignment center
+skinparam shadowing false
+
+actor "Пользователь" as User
+
+package "Браузер" {
+  [React SPA] as SPA
+  note bottom of SPA
+    TypeScript, React, Vite
+    Redux Toolkit, React Router
+    Ant Design
+  end note
+
+  [Web Worker] as Worker
+  note bottom of Worker
+    ML-рекомендации
+    (cosine similarity)
+  end note
+
+  [Canvas 2D] as Canvas
+  note bottom of Canvas
+    генератор билетов
+  end note
+}
+
+package "Docker Compose (make run)" {
+  node "Сервер (Node.js)" as Server
+  note bottom of Server
+    Express, TypeScript
+    REST API (OpenAPI)
+    авторизация (JWT)
+  end note
+
+  database "SQLite" as DB
+  note bottom of DB
+    пользователи, оценки, списки,
+    каталог фильмов (добавляется вручную)
+  end note
+}
+
+cloud "Sentry" as Sentry
+cloud "Яндекс.Метрика" as Metrika
+
+User --> SPA : HTTPS
+SPA <--> Worker : postMessage
+SPA --> Canvas : Canvas API
+SPA <--> Server : HTTP / REST (JSON)
+Server --> DB : SQL
+SPA ..> Sentry : HTTPS
+SPA ..> Metrika : HTTPS
+
+@enduml

@@ -1,34 +1,68 @@
-# Vie — Retro Cinema Film Tracking & Recommendation Platform
+# Vie
 
-Веб-приложение для оценки фильмов и сериалов с персональной рекомендательной системой в стилистике классических американских кинотеатров.
+Веб-приложение для оценки фильмов в стилистике ретро-кинотеатра: каталог, личные оценки, списки просмотренного и рекомендации. Курсовая работа по предмету «Веб-программирование» (ИТМО).
 
-- **Репозиторий:** https://github.com/arthkinq/Vie
-- **Таск-трекер:** https://github.com/users/arthkinq/projects/4
-- **Figma mood board:** https://www.figma.com/design/RGtTFiKy4XuldtptDkBGrt/Untitled?node-id=2-3&t=ORyeURrubKocK7Py-1
-- **User & Data flow:** https://www.figma.com/design/stKbFwJKHEW67ln7teMQUD/G1.1-%E2%80%94-User-Flow?node-id=7-3&t=08FVfEL1L2we1hY8-1
+- Репозиторий: <https://github.com/arthkinq/Vie>
+- Таск-трекер: <https://github.com/users/arthkinq/projects/4>
+- Макеты: <https://www.figma.com/design/RGtTFiKy4XuldtptDkBGrt/Untitled?node-id=2-3&t=ORyeURrubKocK7Py-1>
 
----
+## Что умеет приложение
 
-## Основной функционал
+1. Каталог фильмов. Фильмы добавляются в базу данных вручную.
+2. Регистрация и вход. Оценки (от 1 до 10) и списки «Просмотрено» и «Хочу посмотреть» хранятся для каждого пользователя.
+3. Рекомендации. Считаются в браузере в Web Worker по косинусному сходству между оценками пользователя и фильмами.
+4. Генератор билетов. Рисует ретро-билет на Canvas, который можно скачать.
 
-1. **Витрина и трекинг:** Каталог фильмов, выставление оценок (1–10), ведение списков просмотренного и «Хочу посмотреть».
-2. **Клиентская рекомендательная система (Web Worker #1):**
-3. **Генератор ретро-билетов (Web Worker #2 / Canvas 2D):**
+## Архитектура
 
----
+![Схема архитектуры](docs/G2_1.png)
 
-## Стек технологий *(предварительный, может корректироваться)*
+Исходник схемы: [docs/G2_1.puml](docs/G2_1.puml).
 
-- **Клиент:** React 18, TypeScript, Vite, Redux Toolkit.
-- **Интерфейс:** Ant Design (`antd`), кастомные ретро-стили (CSS Modules, неон, анимации).
-- **Web API & Threads:** Web Workers API, Canvas 2D / OffscreenCanvas API.
-- **Сервер:** Node.js (Fastify, TypeScript, SQLite).
-- **Тестирование и качество:** Vitest (unit/integration, coverage $\ge 80\%$), Playwright (E2E), ESLint.
-- **Контейнеризация:** Docker Compose, `Makefile` (`make run`).
+## Стек
 
----
+| Область | Технологии |
+| --- | --- |
+| Клиент | TypeScript, React, Vite |
+| Состояние и роутинг | Redux Toolkit, React Router |
+| UI | Ant Design |
+| Unit-тесты | Vitest, Testing Library, покрытие через v8 |
+| E2E-тесты | Playwright |
+| Качество кода | ESLint, Prettier, Stylelint |
+| CI | GitHub Actions |
+| Многопоточность | Web Worker (рекомендации) |
+| Графика | Canvas API (генератор билетов) |
+| Сервер | Node.js, Express, TypeScript, REST API (OpenAPI), JWT |
+| База данных | SQLite |
+| Запуск | Docker Compose, `make run` |
+| Аналитика и ошибки | Яндекс.Метрика, Sentry |
 
-## Команда проекта
+*Сервер, база данных, Docker, Web Worker, Canvas, Sentry и Метрика пока не начаты*
+
+## CI и правила работы с репозиторием
+
+Ветка `main` защищена, напрямую в неё пушить нельзя. Изменения попадают в `main` только через Pull Request. Подробности в [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Для каждого PR запускается [CI](.github/workflows/ci.yml). Merge заблокирован, пока все проверки не пройдут:
+
+| Проверка | Что делает |
+| --- | --- |
+| `lint` | ESLint, Prettier, Stylelint |
+| `unit` | unit-тесты |
+| `coverage` | покрытие unit-тестами не ниже 80% |
+| `e2e` | e2e-тесты в Playwright |
+
+## Структура репозитория
+
+```
+client/      фронтенд (React + Vite)
+docs/        схема архитектуры
+.github/     CI и шаблон Pull Request
+```
+
+Папка `server/` появится вместе с серверной частью.
+
+## Команда
 
 | Участник         | Роль / Зона ответственности |
 |------------------|-----------------------------|
