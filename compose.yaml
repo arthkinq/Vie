@@ -1,0 +1,11 @@
+services:
+  server:
+    build: ./server
+    init: true
+
+  client:
+    build: ./client
+    ports:
+      - '8080:80'
+    depends_on:
+      - server
