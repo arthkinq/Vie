@@ -2,6 +2,26 @@ body {
   margin: 0;
 }
 
+.header {
+  display: flex;
+  gap: 24px;
+  padding: 16px 48px;
+}
+
 .content {
   padding: 24px 48px;
+}
+
+.film-row {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+}
+
+.film-card {
+  flex: 0 0 160px;
+}
+
+.film-card img {
+  width: 100%;
 }
