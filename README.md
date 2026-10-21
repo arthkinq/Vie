@@ -37,7 +37,7 @@
 | Запуск | Docker Compose, `make run` |
 | Аналитика и ошибки | Яндекс.Метрика, Sentry |
 
-*Сервер, база данных, Docker, Web Worker, Canvas, Sentry и Метрика пока не начаты*
+*База данных, авторизация, Web Worker, Canvas, Sentry и Метрика пока не начаты*
 
 ### Описание архитектуры и взаимодействия
 
@@ -73,11 +73,29 @@
 
 ```
 client/      фронтенд (React + Vite)
+server/      сервер (Node.js + Express)
 docs/        схема архитектуры
 .github/     CI и шаблон Pull Request
 ```
 
-Папка `server/` появится вместе с серверной частью.
+## Запуск
+
+Нужен Docker. Из корня репозитория:
+
+```bash
+make run
+```
+
+Приложение откроется на <http://localhost:8080>. Остановить: `make stop`.
+
+Для разработки нужен Node.js 26. Сервер и клиент запускаются в двух терминалах:
+
+```bash
+cd server && npm install && npm run dev
+cd client && npm install && npm run dev
+```
+
+Vite проксирует запросы `/api` на сервер (`localhost:3000`).
 
 ## Команда
 

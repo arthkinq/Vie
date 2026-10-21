@@ -1,11 +1,34 @@
 import { expect, test } from '@playwright/test'
 
-test('user can open the catalog from the main page', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/movies', (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: 1,
+          title: 'Касабланка',
+          year: 1942,
+          genres: ['драма'],
+          country: 'США',
+          director: 'Майкл Кёртис',
+          description: 'История любви во время войны.',
+        },
+      ],
+    }),
+  )
+})
+
+test('user opens a film from the main page', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Vie' })).toBeVisible()
+  await page.getByRole('link', { name: /Касабланка/ }).click()
 
-  await page.getByRole('link', { name: 'Каталог' }).click()
+  await expect(page).toHaveURL(/\/film\/1$/)
+  await expect(page.getByRole('heading', { name: 'Касабланка' })).toBeVisible()
+})
 
-  await expect(page).toHaveURL(/\/catalog$/)
-  await expect(page.getByRole('heading', { name: 'Каталог' })).toBeVisible()
+test('user opens the about page from the header', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'О нас' }).click()
+
+  await expect(page.getByRole('heading', { name: 'О нашем кинотеатре' })).toBeVisible()
 })
