@@ -18,11 +18,24 @@ export interface AuthFormProps {
 export default function AuthForm({initialMode = 'login', onSubmit}: AuthFormProps) {
     const [mode, setMode] = useState<AuthMode>(initialMode)
 
-    const [form] = Form.useForm<AuthFormValues>()  
-
+    const [form] = Form.useForm<AuthFormValues>();
+    const tabItems = [
+        { key: 'login', label: 'Войти' },
+        { key: 'register', label: 'Создать' },
+    ];
+    
+    const handleTabChange = (key: string) => {
+        setMode(key as AuthMode)
+        form.resetFields()
+    }
     return (
         <div>
-            <span>Режим: {mode} </span>
+            <Tabs activeKey={mode}
+            onChange={handleTabChange}
+            centered
+            items={tabItems}
+            />
+            <span >Режим: {mode} </span>
         </div>
     )
 }
