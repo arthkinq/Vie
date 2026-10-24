@@ -4,7 +4,7 @@ import './AuthForm.css'
 export type AuthMode = 'login' | 'register'
 
 export interface AuthFormValues {
-  username: string
+  mail: string
   password: string
   confirmPassword?: string
   remember?: boolean
@@ -31,7 +31,7 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
   }
 
   return (
-    <div style={{ maxWidth: 360, margin: '0 auto' }}>
+    <div className="auth-form-container">
       <Tabs activeKey={mode} onChange={handleTabChange} centered items={tabItems} />
 
       <Form
@@ -41,19 +41,27 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
         initialValues={{ remember: false }}
       >
         <Form.Item
-          name="username"
+          validateTrigger="onBlur"
+          name="mail"
+          className="auth-form"
           rules={[
             { required: true, message: 'Введите почту' },
-            { min: 3, message: 'Минимум 3 символа' },
+            { type: 'email', message: 'Введен некорректный адрес почты!' },
           ]}
         >
-          <Input placeholder="username or mail" />
+          <Input placeholder="example@mail.com" />
         </Form.Item>
         <Form.Item
           name="password"
+          validateTrigger="onBlur"
           rules={[
             { required: true, message: 'Введите пароль' },
             { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+              message:
+                'Пароль должен содержать минимум одну заглавную букву, одну строчную и одну цифру!',
+            },
           ]}
         >
           <Input.Password placeholder="password" />
