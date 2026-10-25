@@ -3,7 +3,7 @@ import express from 'express'
 import { checkPassword, createToken, hashPassword, requireAuth } from './auth.ts'
 import { db, toMovie, type MovieRow, type User } from './db.ts'
 
-const app = express()
+export const app = express()
 const port = Number(process.env.PORT) || 3000
 
 app.use(express.json())
@@ -97,6 +97,8 @@ app.delete('/api/ratings/:movieId', requireAuth, (req, res) => {
   res.status(204).end()
 })
 
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`)
-})
+if (import.meta.main) {
+  app.listen(port, () => {
+    console.log(`Server started on http://localhost:${port}`)
+  })
+}
