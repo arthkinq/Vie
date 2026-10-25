@@ -58,6 +58,8 @@ describe('AuthForm', () => {
 
   it('shows error when password does not match complexity rules', async () => {
     render(<AuthForm />)
+    const registerTab = screen.getByRole('tab', { name: 'Создать' })
+    fireEvent.click(registerTab)
     const passwordInput = screen.getByPlaceholderText('password')
     fireEvent.change(passwordInput, { target: { value: 'simplepass' } })
     fireEvent.blur(passwordInput)
