@@ -139,4 +139,20 @@ describe('AuthForm', () => {
       )
     })
   })
+  it('validates invalid characters and valid email in login mode', async () => {
+    render(<AuthForm />)
+    const input = screen.getByPlaceholderText('username or mail')
+
+    fireEvent.change(input, { target: { value: 'user!#$' } })
+    fireEvent.blur(input)
+    expect(
+      await screen.findByText('Логин может содержать только латиницу, цифры и символы _ . -'),
+    ).toBeInTheDocument()
+
+    fireEvent.change(input, { target: { value: 'correct@mail.com' } })
+    fireEvent.blur(input)
+    await waitFor(() => {
+      expect(screen.queryByText('Введен некорректный адрес почты!')).not.toBeInTheDocument()
+    })
+  })
 })
