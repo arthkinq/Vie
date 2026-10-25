@@ -3,8 +3,9 @@ export type Movie = {
   title: string
   year: number
   genres: string[]
-  country: string
+  countries: string[]
   director: string
+  rating: number
   description: string
   poster?: string
 }

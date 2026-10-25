@@ -12,9 +12,20 @@ const movies: Movie[] = [
     title: 'Касабланка',
     year: 1942,
     genres: ['драма'],
-    country: 'США',
+    countries: ['США'],
     director: 'Майкл Кёртис',
+    rating: 8.5,
     description: 'История любви во время войны.',
+  },
+  {
+    id: 2,
+    title: 'Интерстеллар',
+    year: 2014,
+    genres: ['фантастика'],
+    countries: ['США', 'Великобритания'],
+    director: 'Кристофер Нолан',
+    rating: 8.7,
+    description: 'Путешествие через червоточину.',
   },
 ]
 
