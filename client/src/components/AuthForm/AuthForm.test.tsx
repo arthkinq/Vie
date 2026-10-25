@@ -12,7 +12,7 @@ describe('AuthForm', () => {
     expect(screen.getByRole('tab', { name: 'Войти' })).toBeInTheDocument()
     expect(screen.getByRole('tab', { name: 'Создать' })).toBeInTheDocument()
 
-    expect(screen.getByPlaceholderText('username or mail')).toBeInTheDocument
+    expect(screen.getByPlaceholderText('username or mail')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('password')).toBeInTheDocument()
 
     expect(screen.queryByPlaceholderText('repeat password')).not.toBeInTheDocument()
