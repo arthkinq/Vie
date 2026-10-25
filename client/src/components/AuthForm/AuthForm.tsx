@@ -43,7 +43,6 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
         <Form.Item
           validateTrigger="onBlur"
           name="mail"
-          className="auth-form"
           rules={[
             { required: true, message: 'Введите почту' },
             { type: 'email', message: 'Введен некорректный адрес почты!' },
