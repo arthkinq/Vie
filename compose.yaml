@@ -2,6 +2,11 @@ services:
   server:
     build: ./server
     init: true
+    environment:
+      NODE_ENV: production
+      DB_PATH: /app/db/vie.db
+    volumes:
+      - db:/app/db
 
   client:
     build: ./client
@@ -9,3 +14,6 @@ services:
       - '8080:80'
     depends_on:
       - server
+
+volumes:
+  db:
