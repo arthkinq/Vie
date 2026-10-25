@@ -4,7 +4,8 @@ import './AuthForm.css'
 export type AuthMode = 'login' | 'register'
 
 export interface AuthFormValues {
-  mail: string
+  username: string
+  mail?: string
   password: string
   confirmPassword?: string
   remember?: boolean
@@ -40,16 +41,73 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
         onFinish={handleFinish}
         initialValues={{ remember: false }}
       >
-        <Form.Item
-          validateTrigger="onBlur"
-          name="mail"
-          rules={[
-            { required: true, message: 'Введите почту' },
-            { type: 'email', message: 'Введен некорректный адрес почты!' },
-          ]}
-        >
-          <Input placeholder="example@mail.com" />
-        </Form.Item>
+        {mode === 'login' && (
+          <Form.Item
+            validateTrigger="onBlur"
+            name="username"
+            rules={[
+              { required: true, message: 'Введите логин или почту' },
+              { whitespace: true, message: 'Поле не может состоять только из пробелов' },
+              () => ({
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.resolve()
+                  }
+                  if (value.includes('@')) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                    if (!emailRegex.test(value)) {
+                      return Promise.reject(new Error('Введен некорректный адрес почты!'))
+                    }
+                    return Promise.resolve()
+                  }
+                  if (value.length < 3) {
+                    return Promise.reject(new Error('Логин должен содержать минимум 3 символа!'))
+                  }
+                  if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
+                    return Promise.reject(
+                      new Error('Логин может содержать только латиницу, цифры и символы _ . -'),
+                    )
+                  }
+                  return Promise.resolve()
+                },
+              }),
+            ]}
+          >
+            <Input placeholder="username or mail" />
+          </Form.Item>
+        )}
+
+        {mode === 'register' && (
+          <>
+            <Form.Item
+              validateTrigger="onBlur"
+              name="username"
+              rules={[
+                { required: true, message: 'Введите имя пользователя' },
+                { whitespace: true, message: 'Поле не может состоять только из пробелов' },
+                { min: 3, message: 'Имя пользователя должно содержать минимум 3 символа!' },
+                {
+                  pattern: /^[a-zA-Z0-9_.-]+$/,
+                  message:
+                    'Имя пользователя может содержать только латиницу, цифры и символы _ . -',
+                },
+              ]}
+            >
+              <Input placeholder="username" />
+            </Form.Item>
+
+            <Form.Item
+              validateTrigger="onBlur"
+              name="mail"
+              rules={[
+                { required: true, message: 'Введите почту' },
+                { type: 'email', message: 'Введен некорректный адрес почты!' },
+              ]}
+            >
+              <Input placeholder="example@mail.com" />
+            </Form.Item>
+          </>
+        )}
         <Form.Item
           name="password"
           validateTrigger="onBlur"
