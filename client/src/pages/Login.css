@@ -6,9 +6,6 @@
   justify-content: center;
   min-height: calc(100vh - 120px);
   padding: 48px 24px;
-}
-
-body {
   background-color: #140505;
 }
 

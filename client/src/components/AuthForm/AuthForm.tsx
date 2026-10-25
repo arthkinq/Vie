@@ -42,39 +42,49 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
         initialValues={{ remember: false }}
       >
         {mode === 'login' && (
-          <Form.Item
-            validateTrigger="onBlur"
-            name="username"
-            rules={[
-              { required: true, message: 'Введите логин или почту' },
-              { whitespace: true, message: 'Поле не может состоять только из пробелов' },
-              () => ({
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.resolve()
-                  }
-                  if (value.includes('@')) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                    if (!emailRegex.test(value)) {
-                      return Promise.reject(new Error('Введен некорректный адрес почты!'))
+          <>
+            {' '}
+            <Form.Item
+              validateTrigger="onBlur"
+              name="username"
+              rules={[
+                { required: true, message: 'Введите логин или почту' },
+                { whitespace: true, message: 'Поле не может состоять только из пробелов' },
+                () => ({
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.resolve()
+                    }
+                    if (value.includes('@')) {
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                      if (!emailRegex.test(value)) {
+                        return Promise.reject(new Error('Введен некорректный адрес почты!'))
+                      }
+                      return Promise.resolve()
+                    }
+                    if (value.length < 3) {
+                      return Promise.reject(new Error('Логин должен содержать минимум 3 символа!'))
+                    }
+                    if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
+                      return Promise.reject(
+                        new Error('Логин может содержать только латиницу, цифры и символы _ . -'),
+                      )
                     }
                     return Promise.resolve()
-                  }
-                  if (value.length < 3) {
-                    return Promise.reject(new Error('Логин должен содержать минимум 3 символа!'))
-                  }
-                  if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
-                    return Promise.reject(
-                      new Error('Логин может содержать только латиницу, цифры и символы _ . -'),
-                    )
-                  }
-                  return Promise.resolve()
-                },
-              }),
-            ]}
-          >
-            <Input placeholder="username or mail" />
-          </Form.Item>
+                  },
+                }),
+              ]}
+            >
+              <Input placeholder="username or mail" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              validateTrigger="onBlur"
+              rules={[{ required: true, message: 'Введите пароль' }]}
+            >
+              <Input.Password placeholder="password" />
+            </Form.Item>
+          </>
         )}
 
         {mode === 'register' && (
@@ -106,42 +116,41 @@ export default function AuthForm({ initialMode = 'login', onSubmit }: AuthFormPr
             >
               <Input placeholder="example@mail.com" />
             </Form.Item>
+            <Form.Item
+              name="password"
+              validateTrigger="onBlur"
+              rules={[
+                { required: true, message: 'Введите пароль' },
+                { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
+                {
+                  pattern: /^(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d).+$/,
+                  message:
+                    'Пароль должен содержать минимум одну заглавную букву, одну строчную и одну цифру!',
+                },
+              ]}
+            >
+              <Input.Password placeholder="password" />
+            </Form.Item>
+            <Form.Item
+              name="confirmPassword"
+              dependencies={['password']}
+              rules={[
+                { required: true, message: 'Повторите пароль' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(new Error('Пароли не совпадают!'))
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="repeat password" />
+            </Form.Item>
           </>
         )}
-        <Form.Item
-          name="password"
-          validateTrigger="onBlur"
-          rules={[
-            { required: true, message: 'Введите пароль' },
-            { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
-            {
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
-              message:
-                'Пароль должен содержать минимум одну заглавную букву, одну строчную и одну цифру!',
-            },
-          ]}
-        >
-          <Input.Password placeholder="password" />
-        </Form.Item>
-        {mode === 'register' && (
-          <Form.Item
-            name="confirmPassword"
-            dependencies={['password']}
-            rules={[
-              { required: true, message: 'Повторите пароль' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve()
-                  }
-                  return Promise.reject(new Error('Пароли не совпадают!'))
-                },
-              }),
-            ]}
-          >
-            <Input.Password placeholder="repeat password" />
-          </Form.Item>
-        )}
+
         <div
           style={{
             display: 'flex',
