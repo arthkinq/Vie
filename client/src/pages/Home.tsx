@@ -26,9 +26,11 @@ export default function Home() {
     return <Spin />
   }
 
+  const popular = [...items].sort((a, b) => b.rating - a.rating).slice(0, 10)
+
   return (
     <>
-      <FilmRow title="Популярное" movies={items} />
+      <FilmRow title="Популярное" movies={popular} />
       <section>
         <Typography.Title level={2}>Репертуар под ваш вкус</Typography.Title>
         <Typography.Paragraph>

@@ -23,7 +23,7 @@ export default function Film() {
       <Typography.Title>{movie.title}</Typography.Title>
       <Typography.Paragraph>Год: {movie.year}</Typography.Paragraph>
       <Typography.Paragraph>Жанры: {movie.genres.join(', ')}</Typography.Paragraph>
-      <Typography.Paragraph>Страна: {movie.country}</Typography.Paragraph>
+      <Typography.Paragraph>Страна: {movie.countries.join(', ')}</Typography.Paragraph>
       <Typography.Paragraph>Режиссёр: {movie.director}</Typography.Paragraph>
       <Typography.Paragraph>{movie.description}</Typography.Paragraph>
       <Typography.Title level={3}>Оставьте оценку</Typography.Title>
