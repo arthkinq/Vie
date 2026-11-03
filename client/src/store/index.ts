@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
+import auth from './authSlice'
 import movies from './moviesSlice'
 import ratings from './ratingsSlice'
 
-const reducer = combineReducers({ movies, ratings })
+const reducer = combineReducers({ movies, ratings, auth })
 
 export function setupStore(preloadedState?: Partial<RootState>) {
   return configureStore({ reducer, preloadedState })
