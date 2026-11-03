@@ -41,3 +41,8 @@
   z-index: 1;
   width: 100%;
 }
+
+.login-error-wrapper {
+  max-width: 360px;
+  margin: 16px auto 0;
+}
