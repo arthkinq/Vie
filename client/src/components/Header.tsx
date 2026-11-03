@@ -1,6 +1,9 @@
 import { Link, NavLink } from 'react-router'
+import { useAppSelector } from '../store'
 
 export default function Header() {
+  const token = useAppSelector((state) => state.auth.token)
+
   return (
     <header className="header">
       <Link to="/">VIE</Link>
@@ -10,7 +13,7 @@ export default function Header() {
       <NavLink to="/ticket">Билет</NavLink>
       <NavLink to="/about">О нас</NavLink>
       <Link to="/search">Найти фильм</Link>
-      <Link to="/profile">Профиль</Link>
+      {token ? <Link to="/profile">Профиль</Link> : <Link to="/login">Войти</Link>}
     </header>
   )
 }
