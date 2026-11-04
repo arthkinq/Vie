@@ -48,7 +48,7 @@ export default function Home() {
           .filter((movie) => recommendedIds.includes(movie.id))
           .sort((a, b) => recommendedIds.indexOf(a.id) - recommendedIds.indexOf(b.id))
           .slice(0, 10)
-      : popular
+      : popular.filter((movie) => (ratings[movie.id] ?? 10) >= 5)
 
   return (
     <>
