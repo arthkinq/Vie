@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import type { Movie } from '../api'
 import './FilmCard.css'
 
-// рамка постера со светильником (можно использовать отдельно)
 export interface FilmFrameProps {
   poster?: string
   title: string
@@ -17,22 +16,22 @@ export function FilmFrame({ poster, title, alwaysLit = false, className = '' }: 
 
   return (
     <div
-      className={`film-card__frame-wrapper ${alwaysLit ? 'film-card--always-lit' : ''} ${className}`}
+      className={`film-card-frame-wrapper ${alwaysLit ? 'film-card-always-lit' : ''} ${className}`}
     >
-      <div className="film-card__lamp" aria-hidden="true" />
+      <div className="film-card-lamp" aria-hidden="true" />
 
-      <div className="film-card__frame">
+      <div className="film-card-frame">
         {showPoster ? (
           <img
             src={poster}
             alt={title}
-            className="film-card__poster"
+            className="film-card-poster"
             loading="lazy"
             onError={() => setHasError(true)}
           />
         ) : (
-          <div className="film-card__placeholder">
-            <span className="film-card__placeholder-text">NO POSTER YET</span>
+          <div className="film-card-placeholder">
+            <span className="film-card-placeholder-text">NO POSTER YET</span>
           </div>
         )}
       </div>
@@ -40,7 +39,6 @@ export function FilmFrame({ poster, title, alwaysLit = false, className = '' }: 
   )
 }
 
-// табличка с названием, годом и рейтингом (тоже можно использоавть отдельно)
 export interface FilmPlaqueProps {
   title: string
   year?: number
@@ -50,21 +48,20 @@ export interface FilmPlaqueProps {
 
 export function FilmPlaque({ title, year, rating, className = '' }: FilmPlaqueProps) {
   return (
-    <div className={`film-card__plaque ${className}`}>
-      <h3 className="film-card__title" title={title}>
+    <div className={`film-card-plaque ${className}`}>
+      <h3 className="film-card-title" title={title}>
         {title}
       </h3>
       {(year !== undefined || rating !== undefined) && (
-        <div className="film-card__meta">
-          <span className="film-card__year">{year ?? ''}</span>
-          <span className="film-card__rating">{rating !== undefined ? `${rating}` : '—'}</span>
+        <div className="film-card-meta">
+          <span className="film-card-year">{year ?? ''}</span>
+          <span className="film-card-rating">{rating !== undefined ? `${rating}` : '—'}</span>
         </div>
       )}
     </div>
   )
 }
 
-// карточка фильма для каталога
 export interface FilmCardProps {
   movie: Movie
   alwaysLit?: boolean
@@ -75,7 +72,7 @@ export default function FilmCard({ movie, alwaysLit = false, hidePlaque = false 
   return (
     <Link
       to={`/film/${movie.id}`}
-      className={`film-card ${alwaysLit ? 'film-card--always-lit' : ''}`}
+      className={`film-card ${alwaysLit ? 'film-card-always-lit' : ''}`}
     >
       <FilmFrame poster={movie.poster} title={movie.title} alwaysLit={alwaysLit} />
 

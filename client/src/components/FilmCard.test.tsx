@@ -21,7 +21,6 @@ describe('FilmCard component', () => {
     cleanup()
   })
 
-  // карточка показывает название, год и рейтинг
   it('renders title, year and rating correctly', () => {
     const { container } = render(
       <MemoryRouter>
@@ -29,16 +28,15 @@ describe('FilmCard component', () => {
       </MemoryRouter>,
     )
 
-    const titleEl = container.querySelector('.film-card__title')
-    const yearEl = container.querySelector('.film-card__year')
-    const ratingEl = container.querySelector('.film-card__rating')
+    const titleEl = container.querySelector('.film-card-title')
+    const yearEl = container.querySelector('.film-card-year')
+    const ratingEl = container.querySelector('.film-card-rating')
 
     expect(titleEl).toHaveTextContent('Великий Гэтсби')
     expect(yearEl).toHaveTextContent('2013')
     expect(ratingEl).toHaveTextContent('7.2')
   })
 
-  //ссылка ведет на /film/:id
   it('links to /film/:id', () => {
     render(
       <MemoryRouter>
@@ -50,7 +48,6 @@ describe('FilmCard component', () => {
     expect(linkElement).toHaveAttribute('href', '/film/1')
   })
 
-  //отображение постера
   it('shows poster image when poster prop is provided', () => {
     const { container } = render(
       <MemoryRouter>
@@ -58,13 +55,12 @@ describe('FilmCard component', () => {
       </MemoryRouter>,
     )
 
-    const image = container.querySelector('img.film-card__poster')
+    const image = container.querySelector('img.film-card-poster')
     expect(image).toBeInTheDocument()
     expect(image).toHaveAttribute('src', 'the-great-gatsby.jpg')
     expect(image).toHaveAttribute('alt', 'Великий Гэтсби')
   })
 
-  //заглушка, если постера нет
   it('shows placeholder when poster is missing', () => {
     const movieWithoutPoster: Movie = {
       ...mockMovie,
@@ -78,10 +74,9 @@ describe('FilmCard component', () => {
     )
 
     expect(screen.getByText('NO POSTER YET')).toBeInTheDocument()
-    expect(container.querySelector('img.film-card__poster')).not.toBeInTheDocument()
+    expect(container.querySelector('img.film-card-poster')).not.toBeInTheDocument()
   })
 
-  //переход на заглушку при ошибке загрузки картинки
   it('switches to placeholder when poster fails to load', () => {
     const { container } = render(
       <MemoryRouter>
@@ -89,7 +84,7 @@ describe('FilmCard component', () => {
       </MemoryRouter>,
     )
 
-    const img = container.querySelector('img.film-card__poster')
+    const img = container.querySelector('img.film-card-poster')
     expect(img).toBeInTheDocument()
 
     if (img) {
@@ -97,10 +92,9 @@ describe('FilmCard component', () => {
     }
 
     expect(screen.getByText('NO POSTER YET')).toBeInTheDocument()
-    expect(container.querySelector('img.film-card__poster')).not.toBeInTheDocument()
+    expect(container.querySelector('img.film-card-poster')).not.toBeInTheDocument()
   })
 
-  //дефис, если рейтинг не указан
   it('renders fallback dash when rating is missing', () => {
     const movieWithoutRating: Movie = {
       ...mockMovie,
@@ -113,11 +107,10 @@ describe('FilmCard component', () => {
       </MemoryRouter>,
     )
 
-    const ratingEl = container.querySelector('.film-card__rating')
+    const ratingEl = container.querySelector('.film-card-rating')
     expect(ratingEl).toHaveTextContent('—')
   })
 
-  //класс постоянной подсветки лампы
   it('applies always-lit modifier class when alwaysLit prop is true', () => {
     render(
       <MemoryRouter>
@@ -126,6 +119,6 @@ describe('FilmCard component', () => {
     )
 
     const linkElement = screen.getByRole('link')
-    expect(linkElement).toHaveClass('film-card--always-lit')
+    expect(linkElement).toHaveClass('film-card-always-lit')
   })
 })

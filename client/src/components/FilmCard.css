@@ -14,7 +14,7 @@
 }
 
 /* обёртка рамки с лампой */
-.film-card__frame-wrapper {
+.film-card-frame-wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
 }
 
 /* светильник над картиной */
-.film-card__lamp {
+.film-card-lamp {
   position: relative;
   z-index: 5;
   width: 52%;
@@ -36,7 +36,7 @@
 }
 
 /* полоса лампочки снизу */
-.film-card__lamp::before {
+.film-card-lamp::before {
   content: '';
   position: absolute;
   bottom: -1px;
@@ -51,7 +51,7 @@
 }
 
 /* свет между лампой и картиной */
-.film-card__lamp::after {
+.film-card-lamp::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -65,22 +65,22 @@
   transition: opacity 0.3s ease;
 }
 
-/* включение света при наведении или флаге*/
-.film-card:hover .film-card__lamp::before,
-.film-card--always-lit .film-card__lamp::before {
+/* включение света при наведении или флаге */
+.film-card-always-lit .film-card-lamp::before,
+.film-card:hover .film-card-lamp::before {
   background: #fff8c7;
   box-shadow:
     0 0 5px 1px #ffe487,
     0 0 10px 2px rgb(254 206 121 / 75%);
 }
 
-.film-card:hover .film-card__lamp::after,
-.film-card--always-lit .film-card__lamp::after {
+.film-card-always-lit .film-card-lamp::after,
+.film-card:hover .film-card-lamp::after {
   opacity: 1;
 }
 
 /* деревянная рамка картины */
-.film-card__frame {
+.film-card-frame {
   position: relative;
   z-index: 2;
   display: flex;
@@ -97,7 +97,8 @@
   border-radius: 3px;
 }
 
-.film-card__frame::before {
+/* внутренний кант багета */
+.film-card-frame::before {
   content: '';
   position: absolute;
   inset: clamp(6px, 0.8vw, 10px);
@@ -107,7 +108,7 @@
 }
 
 /* постер */
-.film-card__poster {
+.film-card-poster {
   position: relative;
   z-index: 1;
   display: block;
@@ -118,7 +119,7 @@
 }
 
 /* заглушка, если нет постера */
-.film-card__placeholder {
+.film-card-placeholder {
   position: relative;
   z-index: 1;
   display: flex;
@@ -131,7 +132,7 @@
   background: #181410;
 }
 
-.film-card__placeholder-text {
+.film-card-placeholder-text {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +140,7 @@
   width: 100%;
   height: 100%;
   padding: 4px;
-  color: #fece79;
+  color: #fffbaa;
   font-weight: 400;
   font-size: clamp(9px, 1.1vw, 12px);
   font-family: 'Roboto Slab', serif;
@@ -150,7 +151,7 @@
 }
 
 /* деревянная табличка */
-.film-card__plaque {
+.film-card-plaque {
   position: relative;
   z-index: 2;
   display: flex;
@@ -175,8 +176,9 @@
     linear-gradient(180deg, rgb(15 7 3 / 60%) 0%, rgb(5 2 1 / 80%) 100%),
     url('/wood.jpg') center/cover no-repeat;
 }
+
 /* название фильма */
-.film-card__title {
+.film-card-title {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -196,15 +198,15 @@
 }
 
 /* год и рейтинг */
-.film-card__meta {
+.film-card-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
 
-.film-card__year,
-.film-card__rating {
+.film-card-year,
+.film-card-rating {
   color: #fffbaa;
   font-weight: 400;
   font-size: clamp(8px, 0.9vw, 10px);
