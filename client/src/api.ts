@@ -31,24 +31,31 @@ export async function getMovies(): Promise<Movie[]> {
   return response.json()
 }
 
-export async function login(body: { login: string; password: string }) {
+export async function login(body: {
+  login: string
+  password: string
+}): Promise<{ token: string; username: string }> {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
   await checkError(response)
-  return response.json() as Promise<{ token: string; username: string }>
+  return response.json()
 }
 
-export async function register(body: { username: string; mail: string; password: string }) {
+export async function register(body: {
+  username: string
+  mail: string
+  password: string
+}): Promise<{ token: string; username: string }> {
   const response = await fetch('/api/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
   await checkError(response)
-  return response.json() as Promise<{ token: string; username: string }>
+  return response.json()
 }
 
 export async function getRatings(token: string): Promise<Rating[]> {
