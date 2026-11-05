@@ -3,6 +3,14 @@ import { Link } from 'react-router'
 import type { Movie } from '../api'
 import './FilmCard.css'
 
+function getPosterUrl(poster?: string): string {
+  if (!poster) return ''
+  if (poster.startsWith('http') || poster.startsWith('/')) {
+    return poster
+  }
+  return `/api/posters/${poster}`
+}
+
 export interface FilmFrameProps {
   poster?: string
   title: string
@@ -12,7 +20,8 @@ export interface FilmFrameProps {
 
 export function FilmFrame({ poster, title, alwaysLit = false, className = '' }: FilmFrameProps) {
   const [hasError, setHasError] = useState(false)
-  const showPoster = Boolean(poster) && !hasError
+  const posterUrl = getPosterUrl(poster)
+  const showPoster = Boolean(posterUrl) && !hasError
 
   return (
     <div
@@ -23,17 +32,19 @@ export function FilmFrame({ poster, title, alwaysLit = false, className = '' }: 
       <div className="film-card-frame">
         {showPoster ? (
           <img
-            src={poster}
+            src={posterUrl}
             alt={title}
             className="film-card-poster"
             loading="lazy"
             onError={() => setHasError(true)}
           />
         ) : (
-          <div className="film-card-placeholder">
-            <span className="film-card-placeholder-text">NO POSTER YET</span>
-          </div>
+          <div className="film-card-placeholder" aria-label="Нет постера" />
         )}
+        <span className="film-card-frame-beam film-card-frame-beam-top" aria-hidden="true" />
+        <span className="film-card-frame-beam film-card-frame-beam-bottom" aria-hidden="true" />
+        <span className="film-card-frame-beam film-card-frame-beam-left" aria-hidden="true" />
+        <span className="film-card-frame-beam film-card-frame-beam-right" aria-hidden="true" />
       </div>
     </div>
   )
@@ -55,7 +66,7 @@ export function FilmPlaque({ title, year, rating, className = '' }: FilmPlaquePr
       {(year !== undefined || rating !== undefined) && (
         <div className="film-card-meta">
           <span className="film-card-year">{year ?? ''}</span>
-          <span className="film-card-rating">{rating !== undefined ? `${rating}` : '—'}</span>
+          <span className="film-card-rating">{rating !== undefined ? `${rating}/10` : '—'}</span>
         </div>
       )}
     </div>

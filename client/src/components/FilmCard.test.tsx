@@ -34,7 +34,7 @@ describe('FilmCard component', () => {
 
     expect(titleEl).toHaveTextContent('Великий Гэтсби')
     expect(yearEl).toHaveTextContent('2013')
-    expect(ratingEl).toHaveTextContent('7.2')
+    expect(ratingEl).toHaveTextContent('7.2/10')
   })
 
   it('links to /film/:id', () => {
@@ -57,7 +57,7 @@ describe('FilmCard component', () => {
 
     const image = container.querySelector('img.film-card-poster')
     expect(image).toBeInTheDocument()
-    expect(image).toHaveAttribute('src', 'the-great-gatsby.jpg')
+    expect(image?.getAttribute('src')).toContain('/api/posters/the-great-gatsby.jpg')
     expect(image).toHaveAttribute('alt', 'Великий Гэтсби')
   })
 
@@ -73,7 +73,7 @@ describe('FilmCard component', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('NO POSTER YET')).toBeInTheDocument()
+    expect(container.querySelector('.film-card-placeholder')).toBeInTheDocument()
     expect(container.querySelector('img.film-card-poster')).not.toBeInTheDocument()
   })
 
@@ -91,8 +91,7 @@ describe('FilmCard component', () => {
       fireEvent.error(img)
     }
 
-    expect(screen.getByText('NO POSTER YET')).toBeInTheDocument()
-    expect(container.querySelector('img.film-card-poster')).not.toBeInTheDocument()
+    expect(container.querySelector('.film-card-placeholder')).toBeInTheDocument()
   })
 
   it('renders fallback dash when rating is missing', () => {

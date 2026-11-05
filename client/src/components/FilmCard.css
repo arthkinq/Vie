@@ -27,24 +27,28 @@
 .film-card-lamp {
   position: relative;
   z-index: 5;
+  box-sizing: border-box;
   width: 52%;
-  height: clamp(10px, 1.2vw, 15px);
-  margin-bottom: 6px;
-  background: linear-gradient(180deg, #7c583b 0%, #462b17 50%, #29160a 100%);
-  border: 1px solid #8e6545;
-  border-radius: 4px 4px 2px 2px;
+  height: clamp(12px, 1.3vw, 16px);
+  margin-bottom: 12px;
+  border-radius: 3.03px;
+  box-shadow: 0 2.02px 4.04px rgb(0 0 0 / 50%);
+  background:
+    linear-gradient(180deg, #3a1e08 0%, #5c3a1e 100%) right / 6% 100% no-repeat,
+    linear-gradient(90deg, transparent 0%, rgb(255 255 255 / 33%) 50%, transparent 100%),
+    linear-gradient(90deg, #5c3a1e 0%, #8b5e3c 30%, #c49a6c 50%, #8b5e3c 70%, #4a2e14 100%);
 }
 
 /* полоса лампочки снизу */
 .film-card-lamp::before {
   content: '';
   position: absolute;
-  bottom: -1px;
-  left: 10%;
-  width: 80%;
+  bottom: 0;
+  left: 6%;
+  width: 88%;
   height: 2px;
-  background: #3e2617;
-  border-radius: 2px;
+  background: transparent;
+  border-radius: 1px;
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
@@ -56,10 +60,15 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  width: 85%;
-  height: 6px;
+  width: 95%;
+  height: 12px;
   pointer-events: none;
-  background: radial-gradient(ellipse at top, rgb(254 206 121 / 75%) 0%, transparent 80%);
+  background: radial-gradient(
+    ellipse at top,
+    rgb(254 206 121 / 85%) 0%,
+    rgb(254 206 121 / 30%) 55%,
+    transparent 85%
+  );
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -71,7 +80,7 @@
   background: #fff8c7;
   box-shadow:
     0 0 5px 1px #ffe487,
-    0 0 10px 2px rgb(254 206 121 / 75%);
+    0 2px 8px 1px rgb(254 206 121 / 85%);
 }
 
 .film-card-always-lit .film-card-lamp::after,
@@ -83,34 +92,16 @@
 .film-card-frame {
   position: relative;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-sizing: border-box;
   width: 100%;
-  aspect-ratio: 2 / 3.1;
-  padding: clamp(6px, 0.8vw, 10px);
+  aspect-ratio: 2 / 3.15;
   overflow: hidden;
-  background:
-    linear-gradient(135deg, rgb(18 9 4 / 65%) 0%, rgb(8 4 2 / 80%) 100%),
-    url('/wood.jpg') center/cover no-repeat;
-  border-radius: 3px;
-}
-
-/* внутренний кант багета */
-.film-card-frame::before {
-  content: '';
-  position: absolute;
-  inset: clamp(6px, 0.8vw, 10px);
-  z-index: 2;
-  pointer-events: none;
-  border: 1px solid rgb(254 206 121 / 25%);
+  background: #262626;
+  border-radius: 0;
 }
 
 /* постер */
 .film-card-poster {
-  position: relative;
-  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
@@ -118,36 +109,92 @@
   object-position: center;
 }
 
+/* общий стиль для 4 балок */
+.film-card-frame-beam {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden; /* Запирает повернутое дерево внутри планки! */
+}
+
+/* левая балка */
+.film-card-frame-beam-left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: clamp(7px, 0.95vw, 10px);
+  background:
+    linear-gradient(180deg, rgb(15 7 3 / 20%) 0%, rgb(5 2 1 / 35%) 100%),
+    url('/wood.jpg') 15% center / auto 100% no-repeat;
+  box-shadow: inset -1px 0 2px rgb(0 0 0 / 50%);
+}
+
+/* правая балка */
+.film-card-frame-beam-right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: clamp(7px, 0.95vw, 10px);
+  background:
+    linear-gradient(180deg, rgb(15 7 3 / 20%) 0%, rgb(5 2 1 / 35%) 100%),
+    url('/wood.jpg') 85% center / auto 100% no-repeat;
+  box-shadow: inset 1px 0 2px rgb(0 0 0 / 50%);
+}
+
+/* верхняя балка */
+.film-card-frame-beam-top {
+  top: 0;
+  left: clamp(7px, 0.95vw, 10px);
+  right: clamp(7px, 0.95vw, 10px);
+  height: clamp(7px, 0.95vw, 10px);
+  box-shadow:
+    inset 1px 0 0 rgb(0 0 0 / 70%),
+    inset -1px 0 0 rgb(0 0 0 / 70%),
+    inset 0 -1px 2px rgb(0 0 0 / 60%);
+}
+
+.film-card-frame-beam-top::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: url('/wood.jpg') 20% 70% / 160px auto repeat;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* нижняя балка */
+.film-card-frame-beam-bottom {
+  bottom: 0;
+  left: clamp(7px, 0.95vw, 10px);
+  right: clamp(7px, 0.95vw, 10px);
+  height: clamp(7px, 0.95vw, 10px);
+  box-shadow:
+    inset 1px 0 0 rgb(0 0 0 / 70%),
+    inset -1px 0 0 rgb(0 0 0 / 70%),
+    inset 0 1px 2px rgb(0 0 0 / 60%);
+}
+
+.film-card-frame-beam-bottom::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: url('/wood.jpg') 30% 60% / 160px auto repeat;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
 /* заглушка, если нет постера */
 .film-card-placeholder {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 8px;
-  background: #181410;
-}
-
-.film-card-placeholder-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 4px;
-  color: #fffbaa;
-  font-weight: 400;
-  font-size: clamp(9px, 1.1vw, 12px);
-  font-family: 'Roboto Slab', serif;
-  letter-spacing: 1.5px;
-  text-align: center;
-  text-transform: uppercase;
-  border: 1px dashed rgb(255 251 170 / 30%);
+  background: #262626;
 }
 
 /* деревянная табличка */
@@ -161,20 +208,21 @@
   width: 100%;
   height: 54px;
   margin-top: 10px;
-  padding: 6px 14px 5px;
+  padding: 8px 14px 6px;
   clip-path: polygon(
-    8px 0%,
-    calc(100% - 8px) 0%,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    0% calc(100% - 8px),
-    0% 8px
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
   );
   background:
-    linear-gradient(180deg, rgb(15 7 3 / 60%) 0%, rgb(5 2 1 / 80%) 100%),
+    linear-gradient(180deg, rgb(15 7 3 / 45%) 0%, rgb(5 2 1 / 65%) 100%),
     url('/wood.jpg') center/cover no-repeat;
+  border: 1px solid #140803;
 }
 
 /* название фильма */
@@ -183,9 +231,9 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  height: 26px;
+  height: 24px;
   overflow: hidden;
-  color: #fffbaa;
+  color: #fece79;
   font-weight: 700;
   font-size: clamp(10px, 1.05vw, 12px);
   font-family: 'Roboto Slab', serif;
