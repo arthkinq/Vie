@@ -10,20 +10,17 @@ export type Movie = {
   poster?: string
 }
 
-export type AuthResponse = {
-  token: string
-  username: string
+export type Rating = {
+  movieId: number
+  value: number
+  review: string | null
 }
 
-export type LoginCredentials = {
-  login: string
-  password: string
-}
-
-export type RegisterCredentials = {
-  username: string
-  mail: string
-  password: string
+async function checkError(response: Response) {
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.error)
+  }
 }
 
 export async function getMovies(): Promise<Movie[]> {
@@ -34,32 +31,56 @@ export async function getMovies(): Promise<Movie[]> {
   return response.json()
 }
 
-export async function login(credentials: LoginCredentials): Promise<AuthResponse> {
+export async function login(body: { login: string; password: string }) {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   })
-  if (!response.ok) {
-    const data = await response.json().catch(() => null)
-    throw new Error(data?.error || `Ошибка входа: ${response.status}`)
-  }
+  await checkError(response)
+  return response.json() as Promise<{ token: string; username: string }>
+}
+
+export async function register(body: { username: string; mail: string; password: string }) {
+  const response = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  await checkError(response)
+  return response.json() as Promise<{ token: string; username: string }>
+}
+
+export async function getRatings(token: string): Promise<Rating[]> {
+  const response = await fetch('/api/ratings', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  await checkError(response)
   return response.json()
 }
 
-export async function register(credentials: RegisterCredentials): Promise<AuthResponse> {
-  const response = await fetch('/api/auth/register', {
-    method: 'POST',
+export async function saveRating(
+  token: string,
+  movieId: number,
+  value: number,
+  review?: string,
+): Promise<Rating> {
+  const response = await fetch(`/api/ratings/${movieId}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(credentials),
+    body: JSON.stringify({ value, review }),
   })
-  if (!response.ok) {
-    const data = await response.json().catch(() => null)
-    throw new Error(data?.error || `Ошибка регистрации: ${response.status}`)
-  }
+  await checkError(response)
   return response.json()
+}
+
+export async function deleteRating(token: string, movieId: number) {
+  const response = await fetch(`/api/ratings/${movieId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  await checkError(response)
 }
