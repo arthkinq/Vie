@@ -33,11 +33,7 @@ export default function Login() {
       )
       navigate('/profile')
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Произошла непредвиденная ошибка')
-      }
+      setError((err as Error).message)
     }
   }
 
