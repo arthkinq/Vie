@@ -128,7 +128,7 @@ export function buildTicketPath(
     // Левая грань
     ctx.lineTo(0, cornerRadius)
 
-    // Замыкание в левый верхний угол
+    // Замыкание
     ctx.arcTo(0, 0, cornerRadius, 0, cornerRadius)
     ctx.closePath()
     return
@@ -154,4 +154,77 @@ export function buildTicketPath(
   drawSerratedVerticalEdge(ctx, 0, height - cornerPad, cornerPad, teeth, toothDepth, -1)
   ctx.arc(0, 0, concaveRadius, Math.PI / 2, 0, true)
   ctx.closePath()
+}
+function drawStar(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  outerRadius: number,
+  innerRadius: number,
+): void {
+  const spikes = 5
+  let rot = (Math.PI / 2) * 3
+  const step = Math.PI / spikes
+
+  ctx.beginPath()
+  ctx.moveTo(cx, cy - outerRadius)
+  for (let i = 0; i < spikes; i++) {
+    ctx.lineTo(cx + Math.cos(rot) * outerRadius, cy + Math.sin(rot) * outerRadius)
+    rot += step
+    ctx.lineTo(cx + Math.cos(rot) * innerRadius, cy + Math.sin(rot) * innerRadius)
+    rot += step
+  }
+  ctx.closePath()
+  ctx.fill()
+}
+
+export function drawPattern(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  pattern: TicketPattern,
+): void {
+  if (pattern === 'none') return
+
+  ctx.save()
+  ctx.fillStyle = TICKET_STATIC_COLORS.pattern
+  ctx.strokeStyle = TICKET_STATIC_COLORS.pattern
+
+  if (pattern === 'stars') {
+    const stepX = 54
+    const stepY = 54
+    for (let y = 20; y < height; y += stepY) {
+      // Шахматный сдвиг через строку
+      const offsetX = (Math.floor(y / stepY) % 2) * (stepX / 2)
+      for (let x = 16 + offsetX; x < width; x += stepX) {
+        drawStar(ctx, x, y, 7, 3.5)
+      }
+    }
+  } else if (pattern === 'stripes') {
+    ctx.lineWidth = 2.5
+    const step = 28
+    for (let x = -height; x < width + height; x += step) {
+      ctx.beginPath()
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x + height, height)
+      ctx.stroke()
+    }
+  } else if (pattern === 'triangles') {
+    const size = 9
+    const stepX = 44
+    const stepY = 44
+    for (let y = 20; y < height; y += stepY) {
+      const offsetX = (Math.floor(y / stepY) % 2) * (stepX / 2)
+      for (let x = 16 + offsetX; x < width; x += stepX) {
+        ctx.beginPath()
+        ctx.moveTo(x, y - size / 2)
+        ctx.lineTo(x + size / 2, y + size / 2)
+        ctx.lineTo(x - size / 2, y + size / 2)
+        ctx.closePath()
+        ctx.fill()
+      }
+    }
+  }
+
+  ctx.restore()
 }
