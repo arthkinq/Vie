@@ -10,6 +10,11 @@ export type Movie = {
   poster?: string
 }
 
+export type AuthResponse = {
+  token: string
+  username: string
+}
+
 export type Rating = {
   movieId: number
   value: number
@@ -31,10 +36,7 @@ export async function getMovies(): Promise<Movie[]> {
   return response.json()
 }
 
-export async function login(body: {
-  login: string
-  password: string
-}): Promise<{ token: string; username: string }> {
+export async function login(body: { login: string; password: string }): Promise<AuthResponse> {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +50,7 @@ export async function register(body: {
   username: string
   mail: string
   password: string
-}): Promise<{ token: string; username: string }> {
+}): Promise<AuthResponse> {
   const response = await fetch('/api/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
