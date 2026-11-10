@@ -21,7 +21,10 @@ test.beforeEach(async ({ page }) => {
 
 test('user opens a film from the main page', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('link', { name: /Касабланка/ }).click()
+  await page
+    .getByRole('link', { name: /Касабланка/ })
+    .first()
+    .click()
 
   await expect(page).toHaveURL(/\/film\/1$/)
   await expect(page.getByRole('heading', { name: 'Касабланка' })).toBeVisible()
