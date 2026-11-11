@@ -2,6 +2,7 @@
 
 Веб-приложение для оценки фильмов в стилистике ретро-кинотеатра: каталог, личные оценки, списки просмотренного и рекомендации. Курсовая работа по предмету «Веб-программирование» (ИТМО).
 
+- Сайт: <http://72.56.45.24>
 - Репозиторий: <https://github.com/arthkinq/Vie>
 - Таск-трекер: <https://github.com/users/arthkinq/projects/4>
 - Макеты: <https://www.figma.com/design/5ntpPvWoYsYVSAqyhdnwxb/web-design--Copy-?node-id=0-1&t=C1ZVekFI21fSmAnp-1>
@@ -69,6 +70,8 @@
 | `coverage` | покрытие unit-тестами не ниже 80% |
 | `e2e` | e2e-тесты в Playwright |
 | `server` | проверка типов и тесты сервера |
+
+После мержа в `main` запускается [автодеплой](.github/workflows/deploy.yml) на сервер.
 
 ## Структура репозитория
 
