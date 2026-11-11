@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
+import { getRatings } from './api'
 import Header from './components/Header'
 import About from './pages/About'
 import Film from './pages/Film'
@@ -11,17 +12,25 @@ import Search from './pages/Search'
 import Ticket from './pages/Ticket'
 import { useAppDispatch, useAppSelector } from './store'
 import { fetchMovies } from './store/moviesSlice'
+import { setRatings } from './store/ratingsSlice'
 import './index.css'
 
 export default function App() {
   const dispatch = useAppDispatch()
   const status = useAppSelector((state) => state.movies.status)
+  const token = useAppSelector((state) => state.auth.token)
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchMovies())
     }
   }, [status, dispatch])
+
+  useEffect(() => {
+    if (token) {
+      getRatings(token).then((items) => dispatch(setRatings(items)))
+    }
+  }, [token, dispatch])
 
   return (
     <>

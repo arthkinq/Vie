@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@700&display=swap');
+
+.film-row {
+  width: 100%;
+  margin: 0;
+  padding: 12px 0 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.film-row-header {
+  padding: 0 40px;
+  margin-top: 26px;
+  margin-bottom: 24px;
+}
+
+.film-row-title {
+  margin: 0;
+  color: #fffbaa;
+  font-family: Philosopher, sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: pre-line;
+  max-width: 460px;
+}
+
+/* лента карточек */
+.film-row-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 10px 40px 20px;
+  overflow: auto hidden !important;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.film-row-track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.film-row-item {
+  flex: 0 0 220px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.film-row-item > a,
+.film-row-item .film-card {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.film-row-item img,
+.film-row-item .film-card-poster,
+.film-row-item .film-card-placeholder {
+  width: 100% !important;
+  aspect-ratio: 2 / 3 !important;
+  object-fit: cover !important;
+}
