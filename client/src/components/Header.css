@@ -1,32 +1,68 @@
-.curtain-header {
+.header.curtain-header {
+  --curtain-gradient: repeating-linear-gradient(90deg, #68070b, #8f0d12 35px, #68070b 70px);
+
   position: relative;
-  margin-bottom: 20px;
-  min-height: 105px;
-  box-sizing: border-box;
+  display: flex;
   align-items: center;
-  background: repeating-linear-gradient(90deg, #68070b, #8f0d12 35px, #68070b 70px);
-  color: #ffe9a6;
-  font-family: Georgia, serif;
+  box-sizing: border-box;
+  min-height: 90px;
+  margin-bottom: 20px;
+  padding: 16px clamp(20px, 7vw, 120px);
+  background: var(--curtain-gradient);
+  color: #fff9ad;
+  font-family: Philosopher, Georgia, serif;
+  font-weight: 700;
 }
+
+/* Ссылки в шапке */
 
 .curtain-header a {
   color: inherit;
   text-decoration: none;
 }
 
+/* Полукруги занавеса */
+
+.curtain-header::before,
 .curtain-header::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -18px;
-  height: 20px;
-  background: radial-gradient(circle at 20px 0, #850b0f 19px, transparent 20px);
-  background-size: 40px 20px;
-  background-repeat: repeat-x;
-  filter: drop-shadow(0 2px 0 #c89b3c);
+  height: 25px;
   pointer-events: none;
+  mask-image: radial-gradient(circle at 25px 0, #000 24px, transparent 25px);
+  mask-size: 50px 25px;
+  mask-repeat: repeat-x;
 }
+
+/* Золотая окантовка */
+
+.curtain-header::before {
+  bottom: -25px;
+  background: #c89b3c;
+}
+
+/* Продолжение красной ткани на полукругах */
+
+.curtain-header::after {
+  bottom: -23px;
+  background: var(--curtain-gradient);
+}
+
+/* Логотип VIE */
+
+.curtain-header .header-logo {
+  margin-right: 8px;
+  font-family: 'Alfa Slab One', Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #850b0f;
+  -webkit-text-stroke: 1px #fff9ad;
+}
+
+/* Кнопка поиска фильма */
 
 .curtain-header .header-search {
   display: inline-flex;
@@ -36,44 +72,40 @@
   padding: 8px 16px;
   border: 1px solid #c89b3c;
   border-radius: 24px;
+  font-family: 'Roboto Serif', Georgia, serif;
   font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
 }
+
+/* Светло-жёлтый кружок профиля */
 
 .curtain-header .header-account {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background-color: #ffe9a6;
-  color: #850b0f;
-  font-size: 18px;
-  overflow: hidden;
   padding: 0;
+  border-radius: 50%;
+  background-color: #fff9ad;
 }
 
-.curtain-header .header-logo {
-  font-size: 30px;
-  font-weight: bold;
-  color: #850b0f;
-  -webkit-text-stroke: 1px #ffe9a6;
-  letter-spacing: 1px;
-  margin-right: 8px;
-}
+/* Мобильная адаптация */
 
 @media (width <= 600px) {
-  .curtain-header {
+  .header.curtain-header {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 12px;
-    padding: 16px 20px;
     min-height: auto;
+    padding: 16px 20px;
   }
 
   .curtain-header .header-logo {
-    font-size: 26px;
     margin-right: 0;
+    font-size: 26px;
   }
 
   .curtain-header .header-search {
