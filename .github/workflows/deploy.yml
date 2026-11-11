@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - working-directory: client
+        run: |
+          npm ci
+          npm run build
+      - env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          rsync -az --delete client/dist/ "$SSH_USER@$SSH_HOST:/var/www/react-app/dist/"
+          rsync -az server/package.json server/package-lock.json server/src server/data "$SSH_USER@$SSH_HOST:/opt/app-backend/"
+          ssh "$SSH_USER@$SSH_HOST" "cd /opt/app-backend && npm ci --omit=dev && sudo systemctl restart app-backend"
