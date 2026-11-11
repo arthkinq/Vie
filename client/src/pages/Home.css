@@ -33,6 +33,7 @@ main.content {
   margin: 30px -50vw;
   background-color: rgb(146 0 3 / 50%);
   box-sizing: border-box;
+  overflow: visible;
 }
 
 /* завитки корешка */
@@ -70,6 +71,7 @@ main.content {
   padding: 24px 0 28px;
   position: relative;
   z-index: 2;
+  overflow: visible;
 }
 
 .home-ticket-body .film-row {
