@@ -15,6 +15,15 @@ body {
 
 .content {
   padding: 24px 48px;
+  color: #fff;
+}
+
+.content .ant-typography {
+  color: #fff;
+}
+
+.content a {
+  color: var(--vie-gold);
 }
 
 /* Общий стиль основных кнопок VIE */
