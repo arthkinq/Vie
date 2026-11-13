@@ -5,7 +5,7 @@
 - Сайт: <https://vie-club.duckdns.org/>
 - Репозиторий: <https://github.com/arthkinq/Vie>
 - Таск-трекер: <https://github.com/users/arthkinq/projects/4>
-- Макеты: <https://www.figma.com/design/5ntpPvWoYsYVSAqyhdnwxb/web-design--Copy-?node-id=0-1&t=C1ZVekFI21fSmAnp-1>
+- Макеты: <https://www.figma.com/design/5ntpPvWoYsYVSAqyhdnwxb>
 
 ## Что умеет приложение
 
