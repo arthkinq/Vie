@@ -1,4 +1,3 @@
-
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import About from './About'
@@ -23,9 +22,7 @@ describe('About page', () => {
 
     expect(screen.getByText('ОЦЕНИВАТЬ ФИЛЬМЫ')).toBeInTheDocument()
     expect(screen.getByText('ОСТАВЛЯТЬ ОТЗЫВЫ')).toBeInTheDocument()
-    expect(
-      screen.getByText('СОЗДАВАТЬ КОЛЛЕКЦИОННЫЕ БИЛЕТЫ'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('СОЗДАВАТЬ КОЛЛЕКЦИОННЫЕ БИЛЕТЫ')).toBeInTheDocument()
   })
 
   it('renders all team members', () => {
