@@ -1,27 +1,25 @@
-body {
-  margin: 0;
+:root {
+  --vie-background: #2d1014;
+  --vie-section-background: #5f080b;
+  --vie-cream: #f7ebd4;
+  --vie-gold: #fece79;
+  --vie-red: #920003;
 }
 
-.header {
-  display: flex;
-  gap: 24px;
-  padding: 16px 48px;
+body {
+  margin: 0;
+  background-color: var(--vie-background);
+  color: var(--vie-cream);
+  font-family: 'Roboto Slab', serif;
 }
 
 .content {
   padding: 24px 48px;
 }
 
-.film-row {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-}
+/* Общий стиль основных кнопок VIE */
 
-.film-card {
-  flex: 0 0 160px;
-}
-
-.film-card img {
-  width: 100%;
+.ant-btn.ant-btn-primary {
+  border: 2px dotted #6f0d0e;
+  box-shadow: none;
 }
