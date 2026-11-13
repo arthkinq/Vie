@@ -1,0 +1,184 @@
+.about-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px 80px;
+  color: #fece79;
+  font-family: Philosopher, Georgia, serif;
+}
+
+.about-title {
+  margin: 0 0 48px;
+  text-align: center;
+  font-size: clamp(24px, 2.5vw, 38px);
+  font-weight: 700;
+}
+
+.about-description {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 56px 44px;
+  border: 40px solid #920003;
+  border-radius: 110px;
+  background-color: #ffd080;
+  color: #850b0f;
+  text-align: center;
+}
+
+.about-description p {
+  margin: 0;
+  font-family: 'Roboto Slab', Georgia, serif;
+  font-size: clamp(13px, 1.35vw, 18px);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.about-features {
+  margin-top: 60px;
+}
+
+.about-features h2,
+.about-team h2 {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(24px, 2.3vw, 36px);
+  font-weight: 700;
+}
+
+.about-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 720px;
+  margin: 36px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-features-list li {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: clamp(16px, 1.8vw, 26px);
+}
+
+.about-feature-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  color: #ffd080;
+}
+
+.about-ticket-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: #fff9ad;
+  color: #850b0f;
+  font-size: 9px;
+}
+
+.about-team {
+  margin-top: 60px;
+}
+
+.about-team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 940px;
+  margin: 32px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-team-list li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 4px;
+  position: relative;
+  padding-left: 38px;
+  font-size: clamp(17px, 1.7vw, 26px);
+  line-height: 1.4;
+}
+
+.about-team-list li::before {
+  content: '';
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #fff9ad;
+}
+
+.about-team-list strong {
+  color: #ffd33d;
+}
+
+@media (width <= 600px) {
+  .about-page {
+    padding: 20px 12px 60px;
+  }
+
+  .about-title {
+    margin-bottom: 32px;
+  }
+
+  .about-description {
+    padding: 30px 18px;
+    border-width: 16px;
+    border-radius: 48px;
+  }
+
+  .about-description p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .about-features,
+  .about-team {
+    margin-top: 42px;
+  }
+
+  .about-features-list {
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .about-features-list li {
+    gap: 16px;
+  }
+
+  .about-feature-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .about-ticket-icon {
+    width: 48px;
+    height: 24px;
+  }
+
+  .about-team-list {
+    gap: 18px;
+  }
+
+  .about-team-list li {
+    padding-left: 28px;
+    font-size: 16px;
+  }
+
+  .about-team-list li::before {
+    top: 5px;
+    width: 16px;
+    height: 16px;
+  }
+}
