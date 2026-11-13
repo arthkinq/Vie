@@ -2,7 +2,7 @@
 
 Веб-приложение для оценки фильмов в стилистике ретро-кинотеатра: каталог, личные оценки, списки просмотренного и рекомендации. Курсовая работа по предмету «Веб-программирование» (ИТМО).
 
-- Сайт: <http://72.56.45.24>
+- Сайт: <https://vie-club.duckdns.org/>
 - Репозиторий: <https://github.com/arthkinq/Vie>
 - Таск-трекер: <https://github.com/users/arthkinq/projects/4>
 - Макеты: <https://www.figma.com/design/5ntpPvWoYsYVSAqyhdnwxb/web-design--Copy-?node-id=0-1&t=C1ZVekFI21fSmAnp-1>
