@@ -43,4 +43,24 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Профиль' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Войти' })).not.toBeInTheDocument()
   })
+
+  it('renders navigation links with correct addresses', () => {
+    const store = setupStore()
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </Provider>,
+    )
+
+    expect(screen.getByRole('link', { name: 'Главная' })).toHaveAttribute('href', '/')
+
+    expect(screen.getByRole('link', { name: 'Билет' })).toHaveAttribute('href', '/ticket')
+
+    expect(screen.getByRole('link', { name: 'О нас' })).toHaveAttribute('href', '/about')
+
+    expect(screen.getByRole('link', { name: /Найти фильм/i })).toHaveAttribute('href', '/search')
+  })
 })
