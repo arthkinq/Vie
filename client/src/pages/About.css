@@ -73,7 +73,7 @@
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  color: #ffd080;
+  color: #fffbaa;
 }
 
 .about-ticket-icon {
@@ -84,10 +84,11 @@
   width: 58px;
   height: 28px;
   border-radius: 5px;
-  background-color: #fff9ad;
+  background-color: #fffbaa;
   color: #850b0f;
   font-size: 9px;
   text-transform: uppercase;
+  user-select: none;
 }
 
 .about-team {

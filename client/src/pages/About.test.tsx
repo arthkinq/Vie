@@ -30,7 +30,7 @@ describe('About page', () => {
 
     expect(screen.getByText('Сланов Артур')).toBeInTheDocument()
     expect(screen.getByText('Слудная Виктория')).toBeInTheDocument()
-    expect(screen.getByText('Тетман Юлия')).toBeInTheDocument()
+    expect(screen.getByText('Гетман Юлия')).toBeInTheDocument()
     expect(screen.getByText('Герасимова Алина')).toBeInTheDocument()
   })
 })

@@ -45,7 +45,7 @@ export default function About() {
 
           <li>
             <span className="about-ticket-icon" aria-hidden="true">
-              Скачать
+              Билет
             </span>
             <span>Создавать коллекционные билеты</span>
           </li>
@@ -67,7 +67,7 @@ export default function About() {
           </li>
 
           <li>
-            <strong>Тетман Юлия</strong>
+            <strong>Гетман Юлия</strong>
             <span> — каталог фильмов и разработка карточек фильмов.</span>
           </li>
 
