@@ -12,7 +12,7 @@ describe('About page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: 'О НАШЕМ КИНОТЕАТРЕ',
+        name: 'О нашем кинотеатре',
       }),
     ).toBeInTheDocument()
   })
@@ -20,9 +20,9 @@ describe('About page', () => {
   it('renders all features', () => {
     render(<About />)
 
-    expect(screen.getByText('ОЦЕНИВАТЬ ФИЛЬМЫ')).toBeInTheDocument()
-    expect(screen.getByText('ОСТАВЛЯТЬ ОТЗЫВЫ')).toBeInTheDocument()
-    expect(screen.getByText('СОЗДАВАТЬ КОЛЛЕКЦИОННЫЕ БИЛЕТЫ')).toBeInTheDocument()
+    expect(screen.getByText('Оценивать фильмы')).toBeInTheDocument()
+    expect(screen.getByText('Оставлять отзывы')).toBeInTheDocument()
+    expect(screen.getByText('Создавать коллекционные билеты')).toBeInTheDocument()
   })
 
   it('renders all team members', () => {

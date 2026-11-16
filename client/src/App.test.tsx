@@ -52,7 +52,7 @@ describe('App', () => {
     ['/ticket', 'Выберите фильм для создания билета'],
     ['/profile', 'Профиль зрителя'],
     ['/login', 'Вход'],
-    ['/about', 'О НАШЕМ КИНОТЕАТРЕ'],
+    ['/about', 'О нашем кинотеатре'],
     ['/unknown', 'Страница не найдена'],
   ])('renders %s', async (path, heading) => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => movies }))

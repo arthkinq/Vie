@@ -3,16 +3,16 @@
   margin: 0 auto;
   padding: 12px 24px 80px;
   color: #fece79;
-  font-family: Philosopher, Georgia, serif;
 }
 
 .about-title {
   margin: 0 0 48px;
   text-align: center;
+  font-family: Philosopher, Georgia, serif;
   font-size: clamp(24px, 2.5vw, 38px);
   font-weight: 700;
+  text-transform: uppercase;
 }
-
 .about-description {
   box-sizing: border-box;
   width: 100%;
@@ -32,6 +32,7 @@
   font-size: clamp(13px, 1.35vw, 18px);
   font-weight: 700;
   line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .about-features {
@@ -42,6 +43,7 @@
 .about-team h2 {
   margin: 0;
   text-align: center;
+  font-family: Philosopher, Georgia, serif;
   font-size: clamp(24px, 2.3vw, 36px);
   font-weight: 700;
 }
@@ -60,9 +62,11 @@
   display: flex;
   align-items: center;
   gap: 28px;
+  color: #ffd33d;
+  font-family: 'Roboto Serif', Georgia, serif;
   font-size: clamp(16px, 1.8vw, 26px);
+  text-transform: uppercase;
 }
-
 .about-feature-icon {
   flex-shrink: 0;
   width: 48px;
@@ -81,8 +85,8 @@
   background-color: #fff9ad;
   color: #850b0f;
   font-size: 9px;
+  text-transform: uppercase;
 }
-
 .about-team {
   margin-top: 60px;
 }
@@ -104,6 +108,7 @@
   column-gap: 4px;
   position: relative;
   padding-left: 38px;
+  font-family: 'Roboto Slab', Georgia, serif;
   font-size: clamp(17px, 1.7vw, 26px);
   line-height: 1.4;
 }
