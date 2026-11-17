@@ -1,5 +1,6 @@
 import { Rate, Spin, Typography } from 'antd'
 import { useParams } from 'react-router'
+import { deleteRating, saveRating } from '../api'
 import { useAppDispatch, useAppSelector } from '../store'
 import { setRating } from '../store/ratingsSlice'
 import NotFound from './NotFound'
@@ -10,12 +11,24 @@ export default function Film() {
   const status = useAppSelector((state) => state.movies.status)
   const movie = useAppSelector((state) => state.movies.items.find((m) => m.id === id))
   const rating = useAppSelector((state) => state.ratings[id] ?? 0)
+  const token = useAppSelector((state) => state.auth.token)
 
   if (status === 'idle' || status === 'loading') {
     return <Spin />
   }
   if (!movie) {
     return <NotFound />
+  }
+
+  const handleRate = (value: number) => {
+    dispatch(setRating({ filmId: id, value }))
+    if (token) {
+      if (value === 0) {
+        deleteRating(token, id)
+      } else {
+        saveRating(token, id, value)
+      }
+    }
   }
 
   return (
@@ -27,11 +40,7 @@ export default function Film() {
       <Typography.Paragraph>Режиссёр: {movie.director}</Typography.Paragraph>
       <Typography.Paragraph>{movie.description}</Typography.Paragraph>
       <Typography.Title level={3}>Оставьте оценку</Typography.Title>
-      <Rate
-        count={10}
-        value={rating}
-        onChange={(value) => dispatch(setRating({ filmId: id, value }))}
-      />
+      <Rate count={10} value={rating} onChange={handleRate} />
     </div>
   )
 }

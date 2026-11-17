@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { Rating } from '../api'
 
 type RatingsState = Record<number, number>
 
@@ -16,8 +17,15 @@ const ratingsSlice = createSlice({
         state[filmId] = value
       }
     },
+    setRatings(_state, action: PayloadAction<Rating[]>) {
+      const next: RatingsState = {}
+      for (const item of action.payload) {
+        next[item.movieId] = item.value
+      }
+      return next
+    },
   },
 })
 
-export const { setRating } = ratingsSlice.actions
+export const { setRating, setRatings } = ratingsSlice.actions
 export default ratingsSlice.reducer

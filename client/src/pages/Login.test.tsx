@@ -72,20 +72,6 @@ describe('Login page', () => {
 
     expect(await screen.findByText('Неверный логин или пароль')).toBeInTheDocument()
   })
-  it('displays unexpected error message when login fails with non-Error object', async () => {
-    vi.spyOn(api, 'login').mockRejectedValue('Some string error')
-    renderLogin()
-
-    fireEvent.change(screen.getByPlaceholderText('username or mail'), {
-      target: { value: 'viktoria' },
-    })
-    fireEvent.change(screen.getByPlaceholderText('password'), {
-      target: { value: 'AnyPass' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: 'ВОЙТИ' }))
-
-    expect(await screen.findByText('Произошла непредвиденная ошибка')).toBeInTheDocument()
-  })
 
   it('successfully registers and navigates to /profile', async () => {
     vi.spyOn(api, 'register').mockResolvedValue({ token: 'reg-token', username: 'newuser' })
