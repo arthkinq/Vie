@@ -1,60 +1,3 @@
-export type TicketShape = 'classic' | 'serrated' | 'rectangular' | 'notched-serrated'
-export type TicketPattern = 'stars' | 'stripes' | 'triangles' | 'none'
-export type TicketPalette = 'cream-gold' | 'dark-teal' | 'monochrome' | 'red-vintage'
-
-/*export interface TicketStyleOptions {
-  shape: TicketShape
-  pattern: TicketPattern
-  palette: TicketPalette
-  fontFamily: string
-}
-
-export interface TicketUserData {
-  userRating?: number
-  review?: string
-  status?: string
-  date?: string
-  seat?: string
-}
-
-export interface PaletteColors {
-  ticketBg: string // Цвет бумаги билета
-  primary: string // Цвет крупного названия фильма и логотипа
-  accent: string // Цвет декоративной рамки, подзаголовка и рамок блоков
-}
-
-export const TICKET_WIDTH = 920
-export const TICKET_HEIGHT = 380
-export const TEAR_X = 665 // Позиция отрывной линии
-
-export const TICKET_STATIC_COLORS = {
-  inkText: '#182538', // Текст внутри плашек
-  pattern: 'rgba(212, 163, 70, 0.16)', // Узор
-  whiteBox: '#FFFFFF', // Белая подложка
-}
-
-export const PALETTES: Record<TicketPalette, PaletteColors> = {
-  'cream-gold': {
-    ticketBg: '#FDF1B8',
-    primary: '#103A3A',
-    accent: '#8C1818',
-  },
-  'dark-teal': {
-    ticketBg: '#103A3A',
-    primary: '#8C1818',
-    accent: '#FDF1B8',
-  },
-  monochrome: {
-    ticketBg: '#FFFFFF',
-    primary: '#103A3A',
-    accent: '#8C1818',
-  },
-  'red-vintage': {
-    ticketBg: '#8A1414',
-    primary: '#FDF1B8',
-    accent: '#99dfdf',
-  },
-}*/
 export interface TicketDrawData {
   title: string
   year?: number
@@ -67,40 +10,62 @@ export interface TicketDrawData {
   review?: string
 }
 
-export const TICKET_WIDTH = 840
-export const TICKET_HEIGHT = 380
+export const TICKET_WIDTH = 863
+export const TICKET_HEIGHT = 385
 
+// Основные цвета билета
+const COLOR_BG = '#FFFBAA'
+const COLOR_GREEN = '#103A3A'
+const COLOR_RED = '#920003'
+
+// Шрифты. Заголовочный шрифт в будущем будет настраиваемым, пока фиксированный
 const BODY_FONT = '"Roboto Serif", Georgia, serif'
+const HEADING_FONT = '"Sofia Sans Extra Condensed", "Oswald", sans-serif'
+
+const TEAR_X = 618 // центр промежутка между рамками
+const NOTCH_RADIUS = 18
+const CORNER_RADIUS = 32
+const FRAME_RADIUS = 30
+const FRAME_PADDING = 30
+const FRAME_GAP = 74
+const FRAME_TOP = FRAME_PADDING
+const FRAME_HEIGHT = TICKET_HEIGHT - FRAME_PADDING * 2 // 325
+const LEFT_FRAME_X = FRAME_PADDING
+const LEFT_FRAME_W = 551
+const RIGHT_FRAME_X = LEFT_FRAME_X + LEFT_FRAME_W + FRAME_GAP // 655
+const RIGHT_FRAME_W = TICKET_WIDTH - FRAME_PADDING - RIGHT_FRAME_X // 178
+
+const CONTENT_INSET = 36 // отступ содержимого от внутренней рамки
+const HEADLINE_BASELINE = 88 // общая базовая линия названия и «VIE»
 
 /**
- * Разбиение текста на строки с учетом максимальной ширины блока
+ * Отрисовка скругленного прямоугольника
  */
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-  const resultLines: string[] = []
-  const paragraphs = text.split('\n')
-
-  for (const para of paragraphs) {
-    const words = para.split(' ')
-    let currentLine = ''
-
-    for (const word of words) {
-      const testLine = currentLine ? `${currentLine} ${word}` : word
-      if (ctx.measureText(testLine).width > maxWidth && currentLine) {
-        resultLines.push(currentLine)
-        currentLine = word
-      } else {
-        currentLine = testLine
-      }
-    }
-    if (currentLine) {
-      resultLines.push(currentLine)
-    }
-  }
-
-  return resultLines
+function drawRoundedRectPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.lineTo(x + w - r, y)
+  ctx.arc(x + w - r, y + r, r, -Math.PI / 2, 0)
+  ctx.lineTo(x + w, y + h - r)
+  ctx.arc(x + w - r, y + h - r, r, 0, Math.PI / 2)
+  ctx.lineTo(x + r, y + h)
+  ctx.arc(x + r, y + h - r, r, Math.PI / 2, Math.PI)
+  ctx.lineTo(x, y + r)
+  ctx.arc(x + r, y + r, r, Math.PI, -Math.PI / 2)
+  ctx.closePath()
 }
 
-function drawTicketShape(
+/**
+ * Внешний контур билета со скруглениями и круглыми вырезами на линии отрыва
+ */
+function drawTicketOuterShape(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
@@ -125,7 +90,47 @@ function drawTicketShape(
   ctx.closePath()
 }
 
-function drawFieldBox(
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  const resultLines: string[] = []
+  const paragraphs = text.split('\n')
+
+  for (const para of paragraphs) {
+    const words = para.split(' ')
+    let currentLine = ''
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word
+      if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+        resultLines.push(currentLine)
+        currentLine = word
+      } else {
+        currentLine = testLine
+      }
+    }
+    if (currentLine) resultLines.push(currentLine)
+  }
+
+  return resultLines
+}
+
+/**
+ * Обрезает текст
+ */
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+  if (maxWidth <= 0) return ''
+  if (ctx.measureText(text).width <= maxWidth) return text
+
+  let result = text
+  while (result.length > 1 && ctx.measureText(`${result}…`).width > maxWidth) {
+    result = result.slice(0, -1)
+  }
+  return `${result.trimEnd()}…`
+}
+
+/**
+ * Поле с подписью.
+ */
+function drawField(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
@@ -135,38 +140,84 @@ function drawFieldBox(
   value: string,
   isMultiline = false,
 ) {
-  // Подпись над полем
-  ctx.fillStyle = '#0F382C'
-  ctx.font = `600 12px ${BODY_FONT}`
-  ctx.fillText(label, x, y - 5)
+  // 1. Подпись
+  ctx.fillStyle = COLOR_GREEN
+  ctx.font = `400 17px ${BODY_FONT}`
+  ctx.textAlign = 'left'
+  ctx.fillText(label, x, y - 4)
 
-  // Прямоугольник ячейки
-  ctx.fillStyle = '#FDFDF7'
+  // 2. Блок значения
+  ctx.fillStyle = '#FFFFFF'
   ctx.fillRect(x, y, w, h)
-  ctx.strokeStyle = '#C9A96E'
+  ctx.strokeStyle = COLOR_RED
   ctx.lineWidth = 1
-  ctx.strokeRect(x, y, w, h)
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1)
 
-  // Текст внутри ячейки
-  ctx.fillStyle = '#0F382C'
+  // 3. Текст значения
+  ctx.fillStyle = COLOR_GREEN
   if (!isMultiline) {
-    ctx.font = `400 12px ${BODY_FONT}`
+    ctx.font = `400 13px ${BODY_FONT}`
     ctx.textAlign = 'center'
-    ctx.fillText(value, x + w / 2, y + h / 2 + 4)
+    ctx.fillText(fitText(ctx, value, w - 12), x + w / 2, y + h / 2 + 4.5)
     ctx.textAlign = 'left'
   } else {
     ctx.font = `400 11px ${BODY_FONT}`
-    // Вычисляем допустимую ширину строки с отступами слева и справа
-    const maxTextWidth = w - 16
-    const lines = wrapText(ctx, value, maxTextWidth)
-
-    let lineY = y + 16
+    const lines = wrapText(ctx, value, w - 16)
+    let lineY = y + 17
     for (const line of lines) {
-      if (lineY > y + h - 6) break // Не вылезаем за нижний край рамки
+      if (lineY > y + h - 6) break
       ctx.fillText(line, x + 8, lineY)
-      lineY += 15
+      lineY += 13
     }
   }
+}
+
+/**
+ * Строка год - жанры - возраст
+ */
+function drawMetaLine(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  baseline: number,
+  maxWidth: number,
+  year: string,
+  genres: string,
+  age: string,
+) {
+  const dotSize = 8
+  const gap = 8
+
+  ctx.font = `400 14px ${BODY_FONT}`
+  ctx.textAlign = 'left'
+
+  const yearW = ctx.measureText(year).width
+  const ageW = ctx.measureText(age).width
+  const reserved = yearW + ageW + (gap + dotSize + gap) * 2
+  const genresText = fitText(ctx, genres, maxWidth - reserved)
+  const genresW = ctx.measureText(genresText).width
+
+  const drawDot = (dotX: number) => {
+    ctx.beginPath()
+    ctx.arc(dotX + dotSize / 2, baseline - 5, dotSize / 2, 0, Math.PI * 2)
+    ctx.fillStyle = COLOR_RED
+    ctx.fill()
+  }
+
+  let cursor = x
+  ctx.fillStyle = COLOR_RED
+  ctx.fillText(year, cursor, baseline)
+  cursor += yearW + gap
+  drawDot(cursor)
+  cursor += dotSize + gap
+
+  ctx.fillStyle = COLOR_RED
+  ctx.fillText(genresText, cursor, baseline)
+  cursor += genresW + gap
+  drawDot(cursor)
+  cursor += dotSize + gap
+
+  ctx.fillStyle = COLOR_RED
+  ctx.fillText(age, cursor, baseline)
 }
 
 export function drawTicket(
@@ -175,106 +226,95 @@ export function drawTicket(
   width = TICKET_WIDTH,
   height = TICKET_HEIGHT,
 ) {
-  const tearX = 610
-  const notchRadius = 24
-  const cornerRadius = 22
-
   ctx.clearRect(0, 0, width, height)
 
-  // 1. Геометрия билета
-  drawTicketShape(ctx, width, height, tearX, notchRadius, cornerRadius)
-  ctx.fillStyle = '#F8F1D8'
+  // Фон билета
+  drawTicketOuterShape(ctx, width, height, TEAR_X, NOTCH_RADIUS, CORNER_RADIUS)
+  ctx.fillStyle = COLOR_BG
   ctx.fill()
-  ctx.strokeStyle = '#D8BF89'
-  ctx.lineWidth = 2
+
+  // Внутренние красные рамки
+  ctx.strokeStyle = COLOR_RED
+  ctx.lineWidth = 3
+  drawRoundedRectPath(ctx, LEFT_FRAME_X, FRAME_TOP, LEFT_FRAME_W, FRAME_HEIGHT, FRAME_RADIUS)
+  ctx.stroke()
+  drawRoundedRectPath(ctx, RIGHT_FRAME_X, FRAME_TOP, RIGHT_FRAME_W, FRAME_HEIGHT, FRAME_RADIUS)
   ctx.stroke()
 
-  // 2. Линия перфорации
-  ctx.save()
-  ctx.setLineDash([6, 6])
-  ctx.strokeStyle = '#B38E5B'
-  ctx.lineWidth = 1.5
-  ctx.beginPath()
-  ctx.moveTo(tearX, notchRadius + 4)
-  ctx.lineTo(tearX, height - notchRadius - 4)
-  ctx.stroke()
-  ctx.restore()
+  // Заголовок фильма
+  const contentX = LEFT_FRAME_X + CONTENT_INSET
+  const contentW = LEFT_FRAME_W - CONTENT_INSET * 2
 
-  // 3. Декоративная рамка левой части
-  ctx.strokeStyle = '#A33327'
-  ctx.lineWidth = 1.5
-  ctx.strokeRect(24, 24, tearX - 44, height - 48)
+  ctx.textAlign = 'left'
+  ctx.fillStyle = COLOR_GREEN
+  ctx.font = `700 32px ${HEADING_FONT}`
+  const titleText = fitText(ctx, (data.title || 'INTERSTELLAR').toUpperCase(), contentW)
+  ctx.fillText(titleText, contentX, HEADLINE_BASELINE)
 
-  // 4. Заголовок фильма
-  ctx.fillStyle = '#0F382C'
-  ctx.font = 'bold 26px sans-serif'
-  const titleText = (data.title || 'НАЗВАНИЕ ФИЛЬМА').toUpperCase()
-  ctx.fillText(titleText, 40, 60, tearX - 80)
-
-  // 5. Мета-данные
-  const genresStr = data.genres && data.genres.length > 0 ? data.genres.join(', ') : 'Кино'
+  // Мета-данные
+  const genresStr = data.genres && data.genres.length > 0 ? data.genres.join(', ') : 'Приключения'
   const yearStr = data.year ? `${data.year}` : '2024'
   const ageStr = data.ageRating ?? '12+'
-  ctx.fillStyle = '#A33327'
-  ctx.font = `600 12px ${BODY_FONT}`
-  ctx.fillText(`${yearStr} • ${genresStr} • ${ageStr}`, 40, 84, tearX - 80)
+  drawMetaLine(ctx, contentX, HEADLINE_BASELINE + 28, contentW, yearStr, genresStr, ageStr)
 
-  // 6. Поля данных
+  // Поля данных слева.
+  const row1Y = 156
+  const row2Y = row1Y + 68
+  const row3Y = row2Y + 68
+
   const statusVal = data.status ?? 'Любимый'
   const ratingVal = data.rating !== undefined ? `${data.rating}/10` : '—'
-  drawFieldBox(ctx, 40, 115, 85, 26, 'Статус', statusVal)
-  drawFieldBox(ctx, 135, 115, 65, 26, 'Оценка', ratingVal)
+  drawField(ctx, contentX, row1Y, 108, 28, 'Статус', statusVal)
+  drawField(ctx, contentX + 108 + 8, row1Y, 84, 28, 'Оценка', ratingVal)
 
-  // 7. Дата / Время
-  const dateVal = data.dateTime ?? '22.11.2024 | 19:30:28'
-  drawFieldBox(ctx, 40, 175, 160, 26, 'Дата/Время', dateVal)
+  const dateVal = data.dateTime ?? '22.11.2004 | 19:30:28'
+  drawField(ctx, contentX, row2Y, 200, 28, 'Дата/Время', dateVal)
 
-  // 8. Место
   const seatVal = data.seat ?? '22 ряд 55 место'
-  drawFieldBox(ctx, 40, 235, 160, 26, 'Место', seatVal)
+  drawField(ctx, contentX, row3Y, 200, 28, 'Место', seatVal)
 
-  // 9. Блок Отзыва
+  // Поле отзыва
+  const reviewX = contentX + 200 + 38
+  const reviewW = LEFT_FRAME_X + LEFT_FRAME_W - CONTENT_INSET - reviewX
   const defaultReview =
     data.review ||
     'Отличный фильм с великолепной режиссурой и глубоким сюжетом. ' +
       'Оставляет незабываемое впечатление после просмотра. ' +
       'Рекомендуется к просмотру всем ценителям классики.'
-  drawFieldBox(ctx, 220, 115, 345, 146, 'Отзыв', defaultReview, true)
+  drawField(ctx, reviewX, row1Y, reviewW, 173, 'Отзыв', defaultReview, true)
 
-  // 10. Правый корешок
-  ctx.strokeStyle = '#A33327'
-  ctx.lineWidth = 1.5
-  ctx.strokeRect(tearX + 20, 24, width - tearX - 44, height - 48)
-
+  // Корешок
+  const stubCenterX = RIGHT_FRAME_X + RIGHT_FRAME_W / 2
   ctx.textAlign = 'center'
-  ctx.fillStyle = '#0F382C'
-  ctx.font = '900 24px serif'
-  ctx.fillText('VIE', tearX + (width - tearX) / 2, 60)
 
-  ctx.fillStyle = '#A33327'
-  ctx.font = `600 11px ${BODY_FONT}`
-  ctx.fillText('Ретро архив', tearX + (width - tearX) / 2, 78)
-  ctx.fillText('фильмов', tearX + (width - tearX) / 2, 92)
+  ctx.fillStyle = COLOR_GREEN
+  ctx.font = `700 32px ${HEADING_FONT}`
+  ctx.fillText('VIE', stubCenterX, HEADLINE_BASELINE)
 
-  ctx.fillStyle = '#0F382C'
-  ctx.font = `400 12px ${BODY_FONT}`
-  ctx.fillText('itmo.vie.ru', tearX + (width - tearX) / 2, 114)
+  ctx.fillStyle = COLOR_RED
+  ctx.font = `400 14px ${BODY_FONT}`
+  ctx.fillText('Ретро архив', stubCenterX, HEADLINE_BASELINE + 21)
+  ctx.fillText('фильмов', stubCenterX, HEADLINE_BASELINE + 37)
 
-  // Заглушка под QR-код
-  const qrBoxSize = 100
-  const qrX = tearX + (width - tearX) / 2 - qrBoxSize / 2
-  const qrY = 130
+  ctx.fillStyle = COLOR_GREEN
+  ctx.font = `400 17px ${BODY_FONT}`
+  ctx.fillText('itmo.vie.ru', stubCenterX, row1Y - 4)
+
+  // Плейсхолдер QR
+  const qrBoxSize = 104
+  const qrX = stubCenterX - qrBoxSize / 2
   ctx.fillStyle = '#FFFFFF'
-  ctx.fillRect(qrX, qrY, qrBoxSize, qrBoxSize)
-  ctx.strokeStyle = '#C9A96E'
+  ctx.fillRect(qrX, row1Y, qrBoxSize, qrBoxSize)
+  ctx.strokeStyle = COLOR_RED
   ctx.lineWidth = 1
-  ctx.strokeRect(qrX, qrY, qrBoxSize, qrBoxSize)
+  ctx.strokeRect(qrX + 0.5, row1Y + 0.5, qrBoxSize - 1, qrBoxSize - 1)
 
-  ctx.fillStyle = '#A33327'
-  ctx.font = `400 10px ${BODY_FONT}`
-  ctx.fillText('Отсканируй,', tearX + (width - tearX) / 2, 256)
-  ctx.fillText('чтобы оставить', tearX + (width - tearX) / 2, 270)
-  ctx.fillText('свой отзыв', tearX + (width - tearX) / 2, 284)
+  ctx.fillStyle = COLOR_RED
+  ctx.font = `400 11px ${BODY_FONT}`
+  const hintY = row1Y + qrBoxSize + 34
+  ctx.fillText('Отсканируй,', stubCenterX, hintY)
+  ctx.fillText('чтобы оставить', stubCenterX, hintY + 13)
+  ctx.fillText('свой отзыв', stubCenterX, hintY + 26)
 
   ctx.textAlign = 'left'
 }

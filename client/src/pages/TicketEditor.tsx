@@ -5,6 +5,142 @@ import { drawTicket, TICKET_HEIGHT, TICKET_WIDTH } from '../lib/drawTicket'
 import { useAppSelector } from '../store'
 import './TicketEditor.css'
 
+const SHAPE_W = 36
+const SHAPE_H = 78
+
+type CornerMode = 'sharp' | 'concave' | 'round'
+
+interface ShapeOptions {
+  corners: CornerMode
+  cornerSize?: number
+  scallops?: 'horizontal' | 'vertical'
+  scallopCount?: number
+  notches?: 'sides' | 'topBottom'
+  notchRadius?: number
+}
+
+function ticketShapePath(
+  w: number,
+  h: number,
+  {
+    corners,
+    cornerSize = 0,
+    scallops,
+    scallopCount = 10,
+    notches,
+    notchRadius = 3.5,
+  }: ShapeOptions,
+) {
+  const k = corners === 'sharp' ? 0 : cornerSize
+  const cornerSweep = corners === 'concave' ? 0 : 1
+  const n = notchRadius
+  const notchX = w / 3
+  const sideNotchY = h / 3
+
+  const run = (axis: 'h' | 'v', from: number, to: number, fixed: number) => {
+    const step = (to - from) / scallopCount
+    const r = Math.abs(step) / 2
+    const parts: string[] = []
+    for (let i = 1; i <= scallopCount; i += 1) {
+      const pos = from + step * i
+      parts.push(
+        axis === 'h' ? `A ${r} ${r} 0 0 0 ${pos} ${fixed}` : `A ${r} ${r} 0 0 0 ${fixed} ${pos}`,
+      )
+    }
+    return parts
+  }
+
+  const corner = (x: number, y: number) =>
+    k === 0 ? `L ${x} ${y}` : `A ${k} ${k} 0 0 ${cornerSweep} ${x} ${y}`
+
+  const d: string[] = [`M ${k} 0`]
+
+  // верх
+  if (scallops === 'horizontal') d.push(...run('h', k, w - k, 0))
+  else {
+    if (notches === 'topBottom') d.push(`H ${notchX - n}`, `A ${n} ${n} 0 0 0 ${notchX + n} 0`)
+    d.push(`H ${w - k}`)
+  }
+  d.push(corner(w, k))
+
+  // правая сторона
+  if (scallops === 'vertical') d.push(...run('v', k, h - k, w))
+  else {
+    if (notches === 'sides') {
+      d.push(`V ${sideNotchY - n}`, `A ${n} ${n} 0 0 0 ${w} ${sideNotchY + n}`)
+    }
+    d.push(`V ${h - k}`)
+  }
+  d.push(corner(w - k, h))
+
+  // низ
+  if (scallops === 'horizontal') d.push(...run('h', w - k, k, h))
+  else {
+    if (notches === 'topBottom') d.push(`H ${notchX + n}`, `A ${n} ${n} 0 0 0 ${notchX - n} ${h}`)
+    d.push(`H ${k}`)
+  }
+  d.push(corner(0, h - k))
+
+  // левая сторона
+  if (scallops === 'vertical') d.push(...run('v', h - k, k, 0))
+  else {
+    if (notches === 'sides') {
+      d.push(`V ${sideNotchY + n}`, `A ${n} ${n} 0 0 0 0 ${sideNotchY - n}`)
+    }
+    d.push(`V ${k}`)
+  }
+  d.push(corner(k, 0))
+
+  d.push('Z')
+  return d.join(' ')
+}
+
+const SHAPE_PATH_W = SHAPE_W - 2
+const SHAPE_PATH_H = SHAPE_H - 2
+
+const SHAPES: { title: string; path: string }[] = [
+  {
+    title: 'Прямоугольный билет',
+    path: ticketShapePath(SHAPE_PATH_W, SHAPE_PATH_H, { corners: 'sharp' }),
+  },
+  {
+    title: 'Билет с вырезами по бокам',
+    path: ticketShapePath(SHAPE_PATH_W, SHAPE_PATH_H, {
+      corners: 'concave',
+      cornerSize: 6,
+      scallops: 'horizontal',
+      notches: 'sides',
+    }),
+  },
+  {
+    title: 'Билет с вогнутыми углами',
+    path: ticketShapePath(SHAPE_PATH_W, SHAPE_PATH_H, {
+      corners: 'concave',
+      cornerSize: 6,
+      scallops: 'horizontal',
+    }),
+  },
+  {
+    title: 'Скруглённый билет с вырезами по бокам',
+    path: ticketShapePath(SHAPE_PATH_W, SHAPE_PATH_H, {
+      corners: 'round',
+      cornerSize: 3,
+      notches: 'sides',
+    }),
+  },
+]
+
+// Кнопка Скачать
+const DOWNLOAD_W = 133
+const DOWNLOAD_H = 45
+const DOWNLOAD_PATH = ticketShapePath(DOWNLOAD_W - 2, DOWNLOAD_H - 2, {
+  corners: 'concave',
+  cornerSize: 8,
+  scallops: 'vertical',
+  notches: 'topBottom',
+  notchRadius: 4,
+})
+
 export default function TicketEditor() {
   const { id } = useParams<{ id: string }>()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -90,53 +226,19 @@ export default function TicketEditor() {
           <div className="customizer-section">
             <h4 className="customizer-title">Форма</h4>
             <div className="customizer-row shapes-row">
-              {/* Форма 1: Прямой прямоугольник с рамкой */}
-              <button
-                type="button"
-                className={`shape-btn ${selectedShape === 0 ? 'active' : ''}`}
-                onClick={() => setSelectedShape(0)}
-                title="Прямоугольный билет"
-              >
-                <svg viewBox="0 0 28 56" className="shape-svg">
-                  <rect x="2" y="2" width="24" height="52" rx="1" />
-                </svg>
-              </button>
-
-              {/* Форма 2: Зубчатые верх/низ + боковые вырезы */}
-              <button
-                type="button"
-                className={`shape-btn ${selectedShape === 1 ? 'active' : ''}`}
-                onClick={() => setSelectedShape(1)}
-                title="Зубчатый билет с вырезами"
-              >
-                <svg viewBox="0 0 28 56" className="shape-svg">
-                  <path d="M 2 8 A 4 4 0 0 0 6 2 H 8 A 2 2 0 0 0 10 2 H 12 A 2 2 0 0 0 14 2 H 16 A 2 2 0 0 0 18 2 H 20 A 2 2 0 0 0 22 2 H 22 A 4 4 0 0 0 26 8 V 23 A 5 5 0 0 0 26 33 V 48 A 4 4 0 0 0 22 54 H 20 A 2 2 0 0 0 18 54 H 16 A 2 2 0 0 0 14 54 H 12 A 2 2 0 0 0 10 54 H 8 A 2 2 0 0 0 6 54 A 4 4 0 0 0 2 48 V 33 A 5 5 0 0 0 2 23 Z" />
-                </svg>
-              </button>
-
-              {/* Форма 3: Зубчатые верх/низ без боковых вырезов */}
-              <button
-                type="button"
-                className={`shape-btn ${selectedShape === 2 ? 'active' : ''}`}
-                onClick={() => setSelectedShape(2)}
-                title="Зубчатый билет"
-              >
-                <svg viewBox="0 0 28 56" className="shape-svg">
-                  <path d="M 2 8 A 4 4 0 0 0 6 2 H 8 A 2 2 0 0 0 10 2 H 12 A 2 2 0 0 0 14 2 H 16 A 2 2 0 0 0 18 2 H 20 A 2 2 0 0 0 22 2 H 22 A 4 4 0 0 0 26 8 V 48 A 4 4 0 0 0 22 54 H 20 A 2 2 0 0 0 18 54 H 16 A 2 2 0 0 0 14 54 H 12 A 2 2 0 0 0 10 54 H 8 A 2 2 0 0 0 6 54 A 4 4 0 0 0 2 48 Z" />
-                </svg>
-              </button>
-
-              {/* Форма 4: Скругленный со средними вырезами */}
-              <button
-                type="button"
-                className={`shape-btn ${selectedShape === 3 ? 'active' : ''}`}
-                onClick={() => setSelectedShape(3)}
-                title="Скругленный билет с вырезами"
-              >
-                <svg viewBox="0 0 28 56" className="shape-svg">
-                  <path d="M 2 6 Q 2 2 6 2 H 22 Q 26 2 26 6 V 23 A 5 5 0 0 0 26 33 V 50 Q 26 54 22 54 H 6 Q 2 54 2 50 V 33 A 5 5 0 0 0 2 23 Z" />
-                </svg>
-              </button>
+              {SHAPES.map((shape, index) => (
+                <button
+                  key={shape.title}
+                  type="button"
+                  className={`shape-btn ${selectedShape === index ? 'active' : ''}`}
+                  onClick={() => setSelectedShape(index)}
+                  title={shape.title}
+                >
+                  <svg viewBox={`0 0 ${SHAPE_W} ${SHAPE_H}`} className="shape-svg">
+                    <path d={shape.path} transform="translate(1 1)" />
+                  </svg>
+                </button>
+              ))}
             </div>
           </div>
 
@@ -158,10 +260,19 @@ export default function TicketEditor() {
                 className={`square-tool-btn ${selectedPattern === 1 ? 'active' : ''}`}
                 onClick={() => setSelectedPattern(1)}
               >
-                <svg viewBox="0 0 24 24" className="pattern-svg">
-                  <line x1="2" y1="22" x2="22" y2="2" stroke="currentColor" strokeWidth="3" />
-                  <line x1="0" y1="12" x2="12" y2="0" stroke="currentColor" strokeWidth="3" />
-                  <line x1="12" y1="24" x2="24" y2="12" stroke="currentColor" strokeWidth="3" />
+                <svg viewBox="0 0 42 45" preserveAspectRatio="none" className="pattern-svg">
+                  <defs>
+                    <pattern
+                      id="ticket-hatch"
+                      width="8"
+                      height="8"
+                      patternUnits="userSpaceOnUse"
+                      patternTransform="rotate(45)"
+                    >
+                      <rect width="4" height="8" fill="#3D2314" />
+                    </pattern>
+                  </defs>
+                  <rect width="42" height="45" fill="url(#ticket-hatch)" />
                 </svg>
               </button>
               <button
@@ -170,16 +281,15 @@ export default function TicketEditor() {
                 onClick={() => setSelectedPattern(2)}
               >
                 <svg viewBox="0 0 24 24" className="pattern-svg">
-                  <polygon points="12,4 21,20 3,20" />
+                  <polygon points="12,3 22,21 2,21" />
                 </svg>
               </button>
               <button
                 type="button"
                 className={`square-tool-btn ${selectedPattern === 3 ? 'active' : ''}`}
                 onClick={() => setSelectedPattern(3)}
-              >
-                <div className="solid-pattern-box" />
-              </button>
+                aria-label="Без узора"
+              />
             </div>
           </div>
 
@@ -193,10 +303,10 @@ export default function TicketEditor() {
                 onClick={() => setSelectedColor(0)}
               >
                 <div className="palette-grid">
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
-                  <span style={{ backgroundColor: '#0D382B' }} />
-                  <span style={{ backgroundColor: '#8B1E19' }} />
-                  <span style={{ backgroundColor: '#0D382B' }} />
+                  <span style={{ backgroundColor: '#FFFBAA' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
+                  <span style={{ backgroundColor: '#920003' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
                 </div>
               </button>
               <button
@@ -205,10 +315,10 @@ export default function TicketEditor() {
                 onClick={() => setSelectedColor(1)}
               >
                 <div className="palette-grid">
-                  <span style={{ backgroundColor: '#0D382B' }} />
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
-                  <span style={{ backgroundColor: '#8B1E19' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
+                  <span style={{ backgroundColor: '#FFFBAA' }} />
+                  <span style={{ backgroundColor: '#FFFBAA' }} />
+                  <span style={{ backgroundColor: '#920003' }} />
                 </div>
               </button>
               <button
@@ -217,10 +327,10 @@ export default function TicketEditor() {
                 onClick={() => setSelectedColor(2)}
               >
                 <div className="palette-grid">
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
-                  <span style={{ backgroundColor: '#8B1E19' }} />
-                  <span style={{ backgroundColor: '#8B1E19' }} />
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
+                  <span style={{ backgroundColor: '#FFFBAA' }} />
+                  <span style={{ backgroundColor: '#920003' }} />
+                  <span style={{ backgroundColor: '#920003' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
                 </div>
               </button>
               <button
@@ -229,10 +339,10 @@ export default function TicketEditor() {
                 onClick={() => setSelectedColor(3)}
               >
                 <div className="palette-grid">
-                  <span style={{ backgroundColor: '#8B1E19' }} />
-                  <span style={{ backgroundColor: '#0D382B' }} />
-                  <span style={{ backgroundColor: '#0D382B' }} />
-                  <span style={{ backgroundColor: '#FCF1D1' }} />
+                  <span style={{ backgroundColor: '#920003' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
+                  <span style={{ backgroundColor: '#103A3A' }} />
+                  <span style={{ backgroundColor: '#FFFBAA' }} />
                 </div>
               </button>
             </div>
@@ -247,7 +357,7 @@ export default function TicketEditor() {
                 className={`square-tool-btn font-btn font-style-1 ${selectedFont === 0 ? 'active' : ''}`}
                 onClick={() => setSelectedFont(0)}
               >
-                Å
+                A
               </button>
               <button
                 type="button"
@@ -286,8 +396,8 @@ export default function TicketEditor() {
           </div>
 
           <div className="ticket-editor-actions">
-            <Button type="primary" size="large" className="ticket-btn-publish" disabled>
-              ОПУБЛИКОВАТЬ
+            <Button type="primary" size="large" disabled>
+              Опубликовать
             </Button>
 
             <button
@@ -296,39 +406,14 @@ export default function TicketEditor() {
               className="ticket-btn-download"
               title="Скачать билет"
             >
-              <svg className="ticket-btn-download-svg" viewBox="0 0 200 70">
+              <svg className="ticket-btn-download-svg" viewBox={`0 0 ${DOWNLOAD_W} ${DOWNLOAD_H}`}>
                 <path
-                  d="
-                    M 0 12
-                    A 12 12 0 0 0 12 0
-                    H 88
-                    A 12 12 0 0 0 112 0
-                    H 188
-                    A 12 12 0 0 0 200 12
-                    A 4.5 4.5 0 0 0 200 21
-                    A 4.5 4.5 0 0 0 200 30
-                    A 4.5 4.5 0 0 0 200 39
-                    A 4.5 4.5 0 0 0 200 48
-                    A 4.5 4.5 0 0 0 200 58
-                    L 200 58
-                    A 12 12 0 0 0 188 70
-                    H 112
-                    A 12 12 0 0 0 88 70
-                    H 12
-                    A 12 12 0 0 0 0 58
-                    A 4.5 4.5 0 0 0 0 49
-                    A 4.5 4.5 0 0 0 0 40
-                    A 4.5 4.5 0 0 0 0 31
-                    A 4.5 4.5 0 0 0 0 22
-                    A 4.5 4.5 0 0 0 0 12
-                    Z
-                  "
-                  fill="#FFFAB3"
-                  stroke="#8B0000"
-                  strokeWidth="3"
+                  d={DOWNLOAD_PATH}
+                  transform="translate(1 1)"
+                  className="ticket-btn-download-path"
                 />
               </svg>
-              <span className="ticket-btn-download-label">СКАЧАТЬ</span>
+              <span className="ticket-btn-download-label">Скачать</span>
             </button>
           </div>
         </section>

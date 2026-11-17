@@ -1,33 +1,34 @@
-/* Google Fonts: Philosopher 24 + шрифты для кнопок и билета */
 @import url('https://fonts.googleapis.com/css2?family=Oi&family=Oswald:wght@400;700&family=Philosopher:wght@400;700&family=Pixelify+Sans:wght@400;700&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,600;0,8..144,700&family=Sofia+Sans+Extra+Condensed:wght@400;700&display=swap');
 
 .ticket-editor-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 40px 24px;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 40px 32px;
 }
 
 .ticket-editor-layout {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 48px;
-  max-width: 1300px;
+  gap: 136px;
+  max-width: 1360px;
   width: 100%;
 }
 
 /* ---------------- Левая панель кастомизации ---------------- */
 .ticket-customizer-panel {
-  background-color: #432a1f;
-  border-radius: 24px;
-  padding: 24px 20px;
-  width: 260px;
+  box-sizing: border-box;
+  width: 308px;
+  height: 520px;
   flex-shrink: 0;
+  padding: 22px 32px;
+  border-radius: 30px;
+  background-color: rgb(255 251 170 / 20%);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
+  justify-content: space-between;
 }
 
 .customizer-section {
@@ -36,23 +37,24 @@
 }
 
 .customizer-title {
-  font-family: 'Philosopher', sans-serif;
+  font-family: 'Philosopher', 'Roboto Serif', Georgia, serif;
   font-size: 24px;
   font-weight: 400;
+  line-height: 28px;
   color: #ffffff;
   margin: 0 0 12px;
-  letter-spacing: 0.5px;
 }
 
 .customizer-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 17px;
 }
 
 .shapes-row {
-  height: 60px;
+  height: 78px;
+  gap: 30px;
 }
 
 .shape-btn {
@@ -67,64 +69,85 @@
 }
 
 .shape-btn:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .shape-btn.active .shape-svg {
-  filter: drop-shadow(0 0 6px #ffdf85);
+  filter: drop-shadow(0 0 8px #ffdf85);
 }
 
-/* Формы билета */
 .shape-svg {
-  width: 28px;
-  height: 56px;
-  fill: #fffab3;
-  stroke: #3a2318;
+  width: 36px;
+  height: 78px;
+  fill: #fffbaa;
+  stroke: #3d2314;
   stroke-width: 2;
+  transition: fill 0.15s ease;
 }
 
-/* Квадратные кнопки */
+.shape-btn:hover .shape-svg {
+  fill: #ffbd59;
+}
+
 .square-tool-btn {
-  width: 44px;
-  height: 44px;
+  box-sizing: border-box;
+  width: 48px;
+  height: 51px;
+  border: 2px solid #3d2314;
   border-radius: 6px;
-  border: 1px solid transparent;
-  background-color: #fffab3;
-  color: #3b2818;
+  background-color: #fffbaa;
+  color: #3d2314;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 0;
+  padding: 3px;
   overflow: hidden;
   transition:
     transform 0.15s ease,
-    border-color 0.15s ease;
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .square-tool-btn:hover {
+  background-color: #ffbd59;
   transform: scale(1.05);
 }
 
 .square-tool-btn.active {
-  border: 2px solid #ffdf85;
-  box-shadow: 0 0 8px rgb(255 223 133 / 70%);
+  border-color: #3d2314;
+  box-shadow: 0 0 12px 3px rgb(255 223 133 / 80%);
 }
 
 /* Узоры */
 .pattern-svg {
-  width: 24px;
-  height: 24px;
-  fill: #3b2818;
+  width: 100%;
+  height: 100%;
+  fill: #3d2314;
 }
 
 .solid-pattern-box {
   width: 100%;
   height: 100%;
-  background-color: #fffab3;
+  background-color: #fffbaa;
+  transition: background-color 0.15s ease;
+}
+
+.square-tool-btn:hover .solid-pattern-box {
+  background-color: #ffbd59;
 }
 
 /* Палитры */
+.palette-btn {
+  padding: 0;
+  background: transparent;
+}
+
+.palette-btn:hover {
+  background: transparent;
+}
+
 .palette-grid {
   width: 100%;
   height: 100%;
@@ -133,41 +156,46 @@
   grid-template-rows: 1fr 1fr;
 }
 
+.palette-grid span {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Шрифты */
 .font-btn {
-  color: #3b2818;
+  color: #3d2314;
   line-height: 1;
 }
 
 .font-style-1 {
   font-family: 'Pixelify Sans', sans-serif;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .font-style-2 {
   font-family: 'Oswald', sans-serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 500;
 }
 
 .font-style-3 {
   font-family: 'Sofia Sans Extra Condensed', sans-serif;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
 }
 
 .font-style-4 {
   font-family: 'Oi', serif;
-  font-size: 14px;
+  font-size: 30px;
 }
 
-/* ---------------- Правая часть ---------------- */
+/* ---------------- Правая область---------------- */
 .ticket-display-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
-  flex: 1;
+  gap: 52px;
 }
 
 .ticket-editor-canvas-wrapper {
@@ -178,23 +206,24 @@
 }
 
 .ticket-editor-canvas {
+  width: 863px;
+  height: 385px;
   max-width: 100%;
-  height: auto;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 45%);
-  border-radius: 20px;
 }
 
 .ticket-editor-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 17px;
+  width: 100%;
 }
 
+/* Кнопка "Скачать" */
 .ticket-btn-download {
   position: relative;
-  width: 180px;
-  height: 60px;
+  width: 133px;
+  height: 45px;
   background: transparent;
   border: none;
   padding: 0;
@@ -219,17 +248,35 @@
   left: 0;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 4px 8px rgb(0 0 0 / 25%));
+}
+
+.ticket-btn-download-path {
+  fill: #fffbaa;
+  stroke: #920003;
+  stroke-width: 1.5;
+  transition:
+    fill 0.2s ease,
+    stroke 0.2s ease;
+}
+
+.ticket-btn-download:hover .ticket-btn-download-path {
+  fill: #920003;
+  stroke: #920003;
 }
 
 .ticket-btn-download-label {
   position: relative;
   z-index: 1;
   font-family: 'Roboto Serif', Georgia, serif;
-  font-size: 20px;
-  font-weight: 500;
-  color: #2b1810;
-  letter-spacing: 1px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #3d2314;
+  transition: color 0.2s ease;
+  text-transform: uppercase;
+}
+
+.ticket-btn-download:hover .ticket-btn-download-label {
+  color: #fffbaa;
 }
 
 .ticket-editor-not-found {
@@ -238,20 +285,10 @@
   justify-content: center;
 }
 
-@media (width <= 1180px) {
+@media (width <= 1340px) {
   .ticket-editor-layout {
     flex-direction: column;
     align-items: center;
-    gap: 32px;
-  }
-
-  .ticket-customizer-panel {
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .customizer-row {
-    justify-content: flex-start;
-    gap: 16px;
+    gap: 40px;
   }
 }
