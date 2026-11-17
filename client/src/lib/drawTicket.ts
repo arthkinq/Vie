@@ -1,5 +1,3 @@
-import type { Movie } from '../api'
-
 export type TicketShape = 'classic' | 'serrated' | 'rectangular' | 'notched-serrated'
 export type TicketPattern = 'stars' | 'stripes' | 'triangles' | 'none'
 export type TicketPalette = 'cream-gold' | 'dark-teal' | 'monochrome' | 'red-vintage'
@@ -57,7 +55,6 @@ export const PALETTES: Record<TicketPalette, PaletteColors> = {
     accent: '#99dfdf',
   },
 }*/
-
 export interface TicketDrawData {
   title: string
   year?: number
@@ -73,9 +70,8 @@ export interface TicketDrawData {
 export const TICKET_WIDTH = 840
 export const TICKET_HEIGHT = 380
 
-/**
- * Отрисовка базовой формы билета со скруглениями и вырезами перфорации
- */
+const BODY_FONT = '"Roboto Serif", Georgia, serif'
+
 function drawTicketShape(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -85,48 +81,22 @@ function drawTicketShape(
   cornerRadius: number,
 ) {
   ctx.beginPath()
-
-  // Верхний левый угол
   ctx.moveTo(cornerRadius, 0)
-
-  // Верхний край до выреза
   ctx.lineTo(tearX - notchRadius, 0)
-  // Верхний круглый вырез перфорации
   ctx.arc(tearX, 0, notchRadius, Math.PI, 0, true)
-  // Верхний край после выреза
   ctx.lineTo(width - cornerRadius, 0)
-
-  // Верхний правый угол
   ctx.arc(width - cornerRadius, cornerRadius, cornerRadius, -Math.PI / 2, 0)
-
-  // Правый край
   ctx.lineTo(width, height - cornerRadius)
-
-  // Нижний правый угол
   ctx.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2)
-
-  // Нижний край до выреза
   ctx.lineTo(tearX + notchRadius, height)
-  // Нижний круглый вырез перфорации
   ctx.arc(tearX, height, notchRadius, 0, Math.PI, true)
-  // Нижний край после выреза
   ctx.lineTo(cornerRadius, height)
-
-  // Нижний левый угол
   ctx.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI)
-
-  // Левый край
   ctx.lineTo(0, cornerRadius)
-
-  // Верхний левый угол
   ctx.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, -Math.PI / 2)
-
   ctx.closePath()
 }
 
-/**
- * Вспомогательная функция для рисования рамочек с полями (Статус, Оценка, Дата, Отзыв)
- */
 function drawFieldBox(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -137,40 +107,35 @@ function drawFieldBox(
   value: string,
   isMultiline = false,
 ) {
-  // Подпись над полем
   ctx.fillStyle = '#0F382C'
-  ctx.font = 'bold 13px sans-serif'
-  ctx.fillText(label, x, y - 6)
+  ctx.font = `600 12px ${BODY_FONT}`
+  ctx.fillText(label, x, y - 5)
 
-  // Прямоугольник поля
+  // Прямоугольник ячейки
   ctx.fillStyle = '#FDFDF7'
   ctx.fillRect(x, y, w, h)
   ctx.strokeStyle = '#C9A96E'
   ctx.lineWidth = 1
   ctx.strokeRect(x, y, w, h)
 
-  // Текст внутри поля
   ctx.fillStyle = '#0F382C'
   if (!isMultiline) {
-    ctx.font = '13px sans-serif'
+    ctx.font = `400 12px ${BODY_FONT}`
     ctx.textAlign = 'center'
-    ctx.fillText(value, x + w / 2, y + h / 2 + 5)
+    ctx.fillText(value, x + w / 2, y + h / 2 + 4)
     ctx.textAlign = 'left'
   } else {
-    ctx.font = '11px sans-serif'
+    ctx.font = `400 11px ${BODY_FONT}`
     const lines = value.split('\n')
-    let lineY = y + 15
+    let lineY = y + 16
     for (const line of lines) {
       if (lineY > y + h - 6) break
-      ctx.fillText(line, x + 6, lineY)
+      ctx.fillText(line, x + 8, lineY)
       lineY += 14
     }
   }
 }
 
-/**
- * Чистая функция отрисовки билета на Canvas
- */
 export function drawTicket(
   ctx: CanvasRenderingContext2D,
   data: TicketDrawData,
@@ -183,7 +148,7 @@ export function drawTicket(
 
   ctx.clearRect(0, 0, width, height)
 
-  // 1. Фоновая геометрия билета
+  // 1. Геометрия билета
   drawTicketShape(ctx, width, height, tearX, notchRadius, cornerRadius)
   ctx.fillStyle = '#F8F1D8'
   ctx.fill()
@@ -202,23 +167,23 @@ export function drawTicket(
   ctx.stroke()
   ctx.restore()
 
-  // 3. Декоративная рамка левой части билета
+  // 3. Декоративная рамка левой части
   ctx.strokeStyle = '#A33327'
   ctx.lineWidth = 1.5
   ctx.strokeRect(24, 24, tearX - 44, height - 48)
 
-  // 4. Заголовок фильма
+  // 4. Заголовок фильма (остаётся акцидентным/крупным)
   ctx.fillStyle = '#0F382C'
   ctx.font = 'bold 26px sans-serif'
   const titleText = (data.title || 'НАЗВАНИЕ ФИЛЬМА').toUpperCase()
   ctx.fillText(titleText, 40, 60, tearX - 80)
 
-  // 5. Мета-данные: Год • Жанры • Возраст
+  // 5. Мета-данные (Год • Жанры • Возраст) — Roboto Serif
   const genresStr = data.genres && data.genres.length > 0 ? data.genres.join(', ') : 'Кино'
   const yearStr = data.year ? `${data.year}` : '2024'
   const ageStr = data.ageRating ?? '12+'
   ctx.fillStyle = '#A33327'
-  ctx.font = 'bold 12px sans-serif'
+  ctx.font = `600 12px ${BODY_FONT}`
   ctx.fillText(`${yearStr} • ${genresStr} • ${ageStr}`, 40, 84, tearX - 80)
 
   // 6. Поля данных: Статус и Оценка
@@ -243,24 +208,23 @@ export function drawTicket(
       'Рекомендуется к просмотру всем ценителям классики.'
   drawFieldBox(ctx, 220, 115, 345, 146, 'Отзыв', defaultReview, true)
 
-  // 10. Правый корешок: декоративная рамка
+  // 10. Правый корешок
   ctx.strokeStyle = '#A33327'
   ctx.lineWidth = 1.5
   ctx.strokeRect(tearX + 20, 24, width - tearX - 44, height - 48)
 
-  // Тексты на корешке
   ctx.textAlign = 'center'
   ctx.fillStyle = '#0F382C'
   ctx.font = '900 24px serif'
   ctx.fillText('VIE', tearX + (width - tearX) / 2, 60)
 
   ctx.fillStyle = '#A33327'
-  ctx.font = 'bold 11px sans-serif'
+  ctx.font = `600 11px ${BODY_FONT}`
   ctx.fillText('Ретро архив', tearX + (width - tearX) / 2, 78)
   ctx.fillText('фильмов', tearX + (width - tearX) / 2, 92)
 
   ctx.fillStyle = '#0F382C'
-  ctx.font = '12px sans-serif'
+  ctx.font = `400 12px ${BODY_FONT}`
   ctx.fillText('itmo.vie.ru', tearX + (width - tearX) / 2, 114)
 
   // Заглушка под QR-код
@@ -273,9 +237,8 @@ export function drawTicket(
   ctx.lineWidth = 1
   ctx.strokeRect(qrX, qrY, qrBoxSize, qrBoxSize)
 
-  // Подпись под QR-кодом
   ctx.fillStyle = '#A33327'
-  ctx.font = '10px sans-serif'
+  ctx.font = `400 10px ${BODY_FONT}`
   ctx.fillText('Отсканируй,', tearX + (width - tearX) / 2, 256)
   ctx.fillText('чтобы оставить', tearX + (width - tearX) / 2, 270)
   ctx.fillText('свой отзыв', tearX + (width - tearX) / 2, 284)
