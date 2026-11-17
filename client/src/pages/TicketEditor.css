@@ -1,0 +1,67 @@
+.ticket-editor-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  gap: 32px;
+}
+
+.ticket-editor-canvas-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.ticket-editor-canvas {
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 40%);
+  border-radius: 20px;
+}
+
+.ticket-editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* кнопка "Скачать" с формой билетика */
+.ticket-btn-download {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 32px;
+  min-height: 40px;
+  background-color: #fcf1d1;
+  color: #3b2818;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 2px dashed #b8863f;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.ticket-btn-download:hover {
+  background-color: #fff9e6;
+  transform: translateY(-2px);
+}
+
+.ticket-btn-download:active {
+  transform: translateY(0);
+}
+
+.ticket-editor-not-found {
+  padding: 48px 16px;
+  display: flex;
+  justify-content: center;
+}

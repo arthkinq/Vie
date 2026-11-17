@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from './store'
 import { fetchMovies } from './store/moviesSlice'
 import { setRatings } from './store/ratingsSlice'
 import './index.css'
-
+import TicketEditor from './pages/TicketEditor'
 export default function App() {
   const dispatch = useAppDispatch()
   const status = useAppSelector((state) => state.movies.status)
@@ -45,6 +45,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/ticket/:id" element={<TicketEditor />} />
         </Routes>
       </main>
     </>
