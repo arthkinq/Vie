@@ -38,7 +38,6 @@ export default function TicketEditor() {
     }
 
     render()
-
     document.fonts?.ready.then(render)
   }, [movie, userRating])
 
@@ -85,62 +84,63 @@ export default function TicketEditor() {
   return (
     <div className="ticket-editor-page">
       <div className="ticket-editor-layout">
-        {/* Левая панель кастомизации */}
+        {/* Левая панель */}
         <aside className="ticket-customizer-panel">
           {/* Секция: Форма */}
           <div className="customizer-section">
             <h4 className="customizer-title">Форма</h4>
             <div className="customizer-row shapes-row">
-              {/* Форма 1: базовая со скруглениями */}
+              {/* Форма 1: Прямой прямоугольник с рамкой */}
               <button
                 type="button"
                 className={`shape-btn ${selectedShape === 0 ? 'active' : ''}`}
                 onClick={() => setSelectedShape(0)}
-                title="Базовая форма"
+                title="Прямоугольный билет"
               >
-                <svg viewBox="0 0 24 44" className="shape-svg">
-                  <rect x="2" y="2" width="20" height="40" rx="3" />
+                <svg viewBox="0 0 28 56" className="shape-svg">
+                  <rect x="2" y="2" width="24" height="52" rx="1" />
                 </svg>
               </button>
 
-              {/* Форма 2: с боковыми круглыми вырезами */}
+              {/* Форма 2: Зубчатые верх/низ + боковые вырезы */}
               <button
                 type="button"
                 className={`shape-btn ${selectedShape === 1 ? 'active' : ''}`}
                 onClick={() => setSelectedShape(1)}
-                title="Форма с вырезами по бокам"
+                title="Зубчатый билет с вырезами"
               >
-                <svg viewBox="0 0 24 44" className="shape-svg">
-                  <path d="M 2 5 Q 2 2 5 2 H 19 Q 22 2 22 5 V 17 A 5 5 0 0 0 22 27 V 39 Q 22 42 19 42 H 5 Q 2 42 2 39 V 27 A 5 5 0 0 0 2 17 Z" />
+                <svg viewBox="0 0 28 56" className="shape-svg">
+                  <path d="M 2 8 A 4 4 0 0 0 6 2 H 8 A 2 2 0 0 0 10 2 H 12 A 2 2 0 0 0 14 2 H 16 A 2 2 0 0 0 18 2 H 20 A 2 2 0 0 0 22 2 H 22 A 4 4 0 0 0 26 8 V 23 A 5 5 0 0 0 26 33 V 48 A 4 4 0 0 0 22 54 H 20 A 2 2 0 0 0 18 54 H 16 A 2 2 0 0 0 14 54 H 12 A 2 2 0 0 0 10 54 H 8 A 2 2 0 0 0 6 54 A 4 4 0 0 0 2 48 V 33 A 5 5 0 0 0 2 23 Z" />
                 </svg>
               </button>
 
-              {/* Форма 3: со скошенными углами */}
+              {/* Форма 3: Зубчатые верх/низ без боковых вырезов */}
               <button
                 type="button"
                 className={`shape-btn ${selectedShape === 2 ? 'active' : ''}`}
                 onClick={() => setSelectedShape(2)}
-                title="Форма со скошенными углами"
+                title="Зубчатый билет"
               >
-                <svg viewBox="0 0 24 44" className="shape-svg">
-                  <path d="M 6 2 H 18 L 22 6 V 38 L 18 42 H 6 L 2 38 V 6 Z" />
+                <svg viewBox="0 0 28 56" className="shape-svg">
+                  <path d="M 2 8 A 4 4 0 0 0 6 2 H 8 A 2 2 0 0 0 10 2 H 12 A 2 2 0 0 0 14 2 H 16 A 2 2 0 0 0 18 2 H 20 A 2 2 0 0 0 22 2 H 22 A 4 4 0 0 0 26 8 V 48 A 4 4 0 0 0 22 54 H 20 A 2 2 0 0 0 18 54 H 16 A 2 2 0 0 0 14 54 H 12 A 2 2 0 0 0 10 54 H 8 A 2 2 0 0 0 6 54 A 4 4 0 0 0 2 48 Z" />
                 </svg>
               </button>
 
-              {/* Форма 4: с вырезами сверху и снизу */}
+              {/* Форма 4: Скругленный со средними вырезами */}
               <button
                 type="button"
                 className={`shape-btn ${selectedShape === 3 ? 'active' : ''}`}
                 onClick={() => setSelectedShape(3)}
-                title="Форма с верхними и нижними вырезами"
+                title="Скругленный билет с вырезами"
               >
-                <svg viewBox="0 0 24 44" className="shape-svg">
-                  <path d="M 2 5 Q 2 2 5 2 H 8 A 4 4 0 0 0 16 2 H 19 Q 22 2 22 5 V 39 Q 22 42 19 42 H 16 A 4 4 0 0 0 8 42 H 5 Q 2 42 2 39 Z" />
+                <svg viewBox="0 0 28 56" className="shape-svg">
+                  <path d="M 2 6 Q 2 2 6 2 H 22 Q 26 2 26 6 V 23 A 5 5 0 0 0 26 33 V 50 Q 26 54 22 54 H 6 Q 2 54 2 50 V 33 A 5 5 0 0 0 2 23 Z" />
                 </svg>
               </button>
             </div>
           </div>
 
+          {/* Секция: Узор */}
           <div className="customizer-section">
             <h4 className="customizer-title">Узор</h4>
             <div className="customizer-row">
@@ -153,7 +153,6 @@ export default function TicketEditor() {
                   <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
                 </svg>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn ${selectedPattern === 1 ? 'active' : ''}`}
@@ -165,7 +164,6 @@ export default function TicketEditor() {
                   <line x1="12" y1="24" x2="24" y2="12" stroke="currentColor" strokeWidth="3" />
                 </svg>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn ${selectedPattern === 2 ? 'active' : ''}`}
@@ -175,7 +173,6 @@ export default function TicketEditor() {
                   <polygon points="12,4 21,20 3,20" />
                 </svg>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn ${selectedPattern === 3 ? 'active' : ''}`}
@@ -186,6 +183,7 @@ export default function TicketEditor() {
             </div>
           </div>
 
+          {/* Секция: Цвет */}
           <div className="customizer-section">
             <h4 className="customizer-title">Цвет</h4>
             <div className="customizer-row">
@@ -201,7 +199,6 @@ export default function TicketEditor() {
                   <span style={{ backgroundColor: '#0D382B' }} />
                 </div>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn palette-btn ${selectedColor === 1 ? 'active' : ''}`}
@@ -214,7 +211,6 @@ export default function TicketEditor() {
                   <span style={{ backgroundColor: '#8B1E19' }} />
                 </div>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn palette-btn ${selectedColor === 2 ? 'active' : ''}`}
@@ -227,7 +223,6 @@ export default function TicketEditor() {
                   <span style={{ backgroundColor: '#FCF1D1' }} />
                 </div>
               </button>
-
               <button
                 type="button"
                 className={`square-tool-btn palette-btn ${selectedColor === 3 ? 'active' : ''}`}
@@ -243,6 +238,7 @@ export default function TicketEditor() {
             </div>
           </div>
 
+          {/* Секция: Шрифт */}
           <div className="customizer-section">
             <h4 className="customizer-title">Шрифт</h4>
             <div className="customizer-row">
@@ -278,6 +274,7 @@ export default function TicketEditor() {
           </div>
         </aside>
 
+        {/* Правая часть */}
         <section className="ticket-display-container">
           <div className="ticket-editor-canvas-wrapper">
             <canvas
@@ -293,8 +290,45 @@ export default function TicketEditor() {
               ОПУБЛИКОВАТЬ
             </Button>
 
-            <button type="button" onClick={handleDownload} className="ticket-btn-download">
-              СКАЧАТЬ
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="ticket-btn-download"
+              title="Скачать билет"
+            >
+              <svg className="ticket-btn-download-svg" viewBox="0 0 200 70">
+                <path
+                  d="
+                    M 0 12
+                    A 12 12 0 0 0 12 0
+                    H 88
+                    A 12 12 0 0 0 112 0
+                    H 188
+                    A 12 12 0 0 0 200 12
+                    A 4.5 4.5 0 0 0 200 21
+                    A 4.5 4.5 0 0 0 200 30
+                    A 4.5 4.5 0 0 0 200 39
+                    A 4.5 4.5 0 0 0 200 48
+                    A 4.5 4.5 0 0 0 200 58
+                    L 200 58
+                    A 12 12 0 0 0 188 70
+                    H 112
+                    A 12 12 0 0 0 88 70
+                    H 12
+                    A 12 12 0 0 0 0 58
+                    A 4.5 4.5 0 0 0 0 49
+                    A 4.5 4.5 0 0 0 0 40
+                    A 4.5 4.5 0 0 0 0 31
+                    A 4.5 4.5 0 0 0 0 22
+                    A 4.5 4.5 0 0 0 0 12
+                    Z
+                  "
+                  fill="#FFFAB3"
+                  stroke="#8B0000"
+                  strokeWidth="3"
+                />
+              </svg>
+              <span className="ticket-btn-download-label">СКАЧАТЬ</span>
             </button>
           </div>
         </section>

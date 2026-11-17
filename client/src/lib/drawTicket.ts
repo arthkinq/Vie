@@ -72,6 +72,34 @@ export const TICKET_HEIGHT = 380
 
 const BODY_FONT = '"Roboto Serif", Georgia, serif'
 
+/**
+ * Разбиение текста на строки с учетом максимальной ширины блока
+ */
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  const resultLines: string[] = []
+  const paragraphs = text.split('\n')
+
+  for (const para of paragraphs) {
+    const words = para.split(' ')
+    let currentLine = ''
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word
+      if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+        resultLines.push(currentLine)
+        currentLine = word
+      } else {
+        currentLine = testLine
+      }
+    }
+    if (currentLine) {
+      resultLines.push(currentLine)
+    }
+  }
+
+  return resultLines
+}
+
 function drawTicketShape(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -107,6 +135,7 @@ function drawFieldBox(
   value: string,
   isMultiline = false,
 ) {
+  // Подпись над полем
   ctx.fillStyle = '#0F382C'
   ctx.font = `600 12px ${BODY_FONT}`
   ctx.fillText(label, x, y - 5)
@@ -118,6 +147,7 @@ function drawFieldBox(
   ctx.lineWidth = 1
   ctx.strokeRect(x, y, w, h)
 
+  // Текст внутри ячейки
   ctx.fillStyle = '#0F382C'
   if (!isMultiline) {
     ctx.font = `400 12px ${BODY_FONT}`
@@ -126,12 +156,15 @@ function drawFieldBox(
     ctx.textAlign = 'left'
   } else {
     ctx.font = `400 11px ${BODY_FONT}`
-    const lines = value.split('\n')
+    // Вычисляем допустимую ширину строки с отступами слева и справа
+    const maxTextWidth = w - 16
+    const lines = wrapText(ctx, value, maxTextWidth)
+
     let lineY = y + 16
     for (const line of lines) {
-      if (lineY > y + h - 6) break
+      if (lineY > y + h - 6) break // Не вылезаем за нижний край рамки
       ctx.fillText(line, x + 8, lineY)
-      lineY += 14
+      lineY += 15
     }
   }
 }
@@ -172,13 +205,13 @@ export function drawTicket(
   ctx.lineWidth = 1.5
   ctx.strokeRect(24, 24, tearX - 44, height - 48)
 
-  // 4. Заголовок фильма (остаётся акцидентным/крупным)
+  // 4. Заголовок фильма
   ctx.fillStyle = '#0F382C'
   ctx.font = 'bold 26px sans-serif'
   const titleText = (data.title || 'НАЗВАНИЕ ФИЛЬМА').toUpperCase()
   ctx.fillText(titleText, 40, 60, tearX - 80)
 
-  // 5. Мета-данные (Год • Жанры • Возраст) — Roboto Serif
+  // 5. Мета-данные
   const genresStr = data.genres && data.genres.length > 0 ? data.genres.join(', ') : 'Кино'
   const yearStr = data.year ? `${data.year}` : '2024'
   const ageStr = data.ageRating ?? '12+'
@@ -186,7 +219,7 @@ export function drawTicket(
   ctx.font = `600 12px ${BODY_FONT}`
   ctx.fillText(`${yearStr} • ${genresStr} • ${ageStr}`, 40, 84, tearX - 80)
 
-  // 6. Поля данных: Статус и Оценка
+  // 6. Поля данных
   const statusVal = data.status ?? 'Любимый'
   const ratingVal = data.rating !== undefined ? `${data.rating}/10` : '—'
   drawFieldBox(ctx, 40, 115, 85, 26, 'Статус', statusVal)
@@ -203,8 +236,8 @@ export function drawTicket(
   // 9. Блок Отзыва
   const defaultReview =
     data.review ||
-    'Отличный фильм с великолепной режиссурой и глубоким сюжетом.\n' +
-      'Оставляет незабываемое впечатление после просмотра.\n' +
+    'Отличный фильм с великолепной режиссурой и глубоким сюжетом. ' +
+      'Оставляет незабываемое впечатление после просмотра. ' +
       'Рекомендуется к просмотру всем ценителям классики.'
   drawFieldBox(ctx, 220, 115, 345, 146, 'Отзыв', defaultReview, true)
 
