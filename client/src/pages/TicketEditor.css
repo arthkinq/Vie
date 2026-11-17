@@ -37,11 +37,11 @@
 }
 
 .customizer-title {
-  font-family: 'Philosopher', 'Roboto Serif', Georgia, serif;
+  font-family: Philosopher, 'Roboto Serif', Georgia, serif;
   font-size: 24px;
   font-weight: 400;
   line-height: 28px;
-  color: #ffffff;
+  color: #fff;
   margin: 0 0 12px;
 }
 
@@ -72,10 +72,6 @@
   transform: scale(1.05);
 }
 
-.shape-btn.active .shape-svg {
-  filter: drop-shadow(0 0 8px #ffdf85);
-}
-
 .shape-svg {
   width: 36px;
   height: 78px;
@@ -83,6 +79,10 @@
   stroke: #3d2314;
   stroke-width: 2;
   transition: fill 0.15s ease;
+}
+
+.shape-btn.active .shape-svg {
+  filter: drop-shadow(0 0 8px #ffdf85);
 }
 
 .shape-btn:hover .shape-svg {
@@ -174,7 +174,7 @@
 }
 
 .font-style-2 {
-  font-family: 'Oswald', sans-serif;
+  font-family: Oswald, sans-serif;
   font-size: 22px;
   font-weight: 500;
 }
@@ -186,7 +186,7 @@
 }
 
 .font-style-4 {
-  font-family: 'Oi', serif;
+  font-family: Oi, serif;
   font-size: 30px;
 }
 
