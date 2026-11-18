@@ -123,21 +123,14 @@
   font-size: 28px;
 }
 
-.film-overall-stars .ant-rate-star-full .ant-rate-star-second,
-.film-user-rating .ant-rate-star-full .ant-rate-star-second {
-  color: #ffd33d;
-}
-
-.film-overall-stars .ant-rate-star-half .ant-rate-star-first,
-.film-user-rating .ant-rate-star-half .ant-rate-star-first {
-  color: #ffd33d;
-}
-
-.film-overall-stars .ant-rate-star-zero .ant-rate-star-first,
-.film-overall-stars .ant-rate-star-zero .ant-rate-star-second,
-.film-user-rating .ant-rate-star-zero .ant-rate-star-first,
-.film-user-rating .ant-rate-star-zero .ant-rate-star-second {
+.film-page .ant-rate .ant-rate-star-first,
+.film-page .ant-rate .ant-rate-star-second {
   color: rgb(255 249 173 / 45%);
+}
+
+.film-page .ant-rate .ant-rate-star-full .ant-rate-star-second,
+.film-page .ant-rate .ant-rate-star-half .ant-rate-star-first {
+  color: #ffd33d;
 }
 
 .film-review-input {
@@ -156,19 +149,6 @@
 
 .film-review-button {
   align-self: flex-end;
-  padding: 8px 20px;
-  border: 0;
-  border-radius: 4px;
-  background-color: #fff9ad;
-  color: #850b0f;
-  font-family: 'Roboto Serif', Georgia, serif;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.film-review-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
 }
 
 .film-reviews {

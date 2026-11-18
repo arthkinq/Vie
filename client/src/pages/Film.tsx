@@ -1,21 +1,34 @@
 import { useState } from 'react'
-import { Rate, Spin } from 'antd'
+import { Button, message, Rate, Spin } from 'antd'
 import { useParams } from 'react-router'
-import { saveRating } from '../api'
-import { useAppDispatch, useAppSelector } from '../store'
+import { deleteRating, saveRating } from '../api'
+import { useAppDispatch, useAppSelector, useAppStore } from '../store'
 import { setRating } from '../store/ratingsSlice'
+import { setReview } from '../store/reviewsSlice'
 import NotFound from './NotFound'
 import './Film.css'
 
 export default function Film() {
   const id = Number(useParams().id)
+
+  return <FilmContent key={id} id={id} />
+}
+
+function FilmContent({ id }: { id: number }) {
   const dispatch = useAppDispatch()
+  const appStore = useAppStore()
+  const [messageApi, contextHolder] = message.useMessage()
 
   const status = useAppSelector((state) => state.movies.status)
   const movie = useAppSelector((state) => state.movies.items.find((m) => m.id === id))
   const rating = useAppSelector((state) => state.ratings[id] ?? 0)
+  const savedReview = useAppSelector((state) => state.reviews[id])
+  const username = useAppSelector((state) => state.auth.username)
   const token = useAppSelector((state) => state.auth.token)
+
   const [reviewText, setReviewText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSavingRating, setIsSavingRating] = useState(false)
 
   if (status === 'idle' || status === 'loading') {
     return <Spin />
@@ -25,31 +38,79 @@ export default function Film() {
     return <NotFound />
   }
 
-  const handleRate = (value: number) => {
-    dispatch(setRating({ filmId: id, value }))
+  const handleRate = async (value: number) => {
+    if (isSavingRating || isSubmitting) {
+      return
+    }
+
+    setIsSavingRating(true)
+
+    try {
+      if (token) {
+        if (value === 0) {
+          await deleteRating(token, id)
+        } else {
+          await saveRating(token, id, value, savedReview)
+        }
+      }
+      if (appStore.getState().auth.token !== token) {
+        return
+      }
+      dispatch(setRating({ filmId: id, value }))
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : 'Не удалось сохранить оценку')
+    } finally {
+      setIsSavingRating(false)
+    }
   }
 
   const handleSubmit = async () => {
+    if (isSubmitting || isSavingRating) {
+      return
+    }
+
     if (!token) {
-      alert('Для отправки отзыва необходимо войти в аккаунт')
+      messageApi.warning('Для отправки отзыва необходимо войти в аккаунт')
       return
     }
 
     if (rating === 0) {
-      alert('Сначала поставьте оценку фильму')
+      messageApi.warning('Сначала поставьте оценку фильму')
       return
     }
 
+    const text = reviewText.trim()
+
+    if (!text) {
+      messageApi.warning('Напишите текст отзыва')
+      return
+    }
+
+    setIsSubmitting(true)
+
     try {
-      await saveRating(token, id, rating, reviewText)
-      alert('Ваш отзыв успешно сохранён!')
-    } catch {
-      alert('Не удалось сохранить отзыв. Попробуйте ещё раз.')
+      const result = await saveRating(token, id, rating, text)
+      if (appStore.getState().auth.token !== token) {
+        return
+      }
+
+      dispatch(setRating({ filmId: id, value: result.value }))
+      dispatch(setReview({ filmId: id, review: result.review }))
+
+      setReviewText('')
+
+      messageApi.success('Ваш отзыв успешно сохранён!')
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : 'Не удалось сохранить отзыв')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
     <div className="film-page">
+      {contextHolder}
+
       <section className="film-details">
         <div className="film-poster-container">
           {movie.poster ? (
@@ -102,6 +163,8 @@ export default function Film() {
             className="film-user-rating"
             count={5}
             allowHalf
+            allowClear
+            disabled={isSubmitting || isSavingRating}
             value={rating / 2}
             onChange={(value) => handleRate(value * 2)}
           />
@@ -113,34 +176,32 @@ export default function Film() {
           aria-label="Отзыв о фильме"
           value={reviewText}
           onChange={(event) => setReviewText(event.target.value)}
+          disabled={isSubmitting}
         />
 
-        <button className="film-review-button" type="button" onClick={handleSubmit}>
+        <Button
+          className="film-review-button"
+          type="primary"
+          htmlType="button"
+          loading={isSubmitting}
+          disabled={isSubmitting || isSavingRating}
+          onClick={handleSubmit}
+        >
           Отправить
-        </button>
+        </Button>
       </section>
 
       <section className="film-reviews" aria-label="Отзывы зрителей">
-        <article className="film-review">
-          <div className="film-review-content">
-            <h3>Алексей</h3>
-            <p>Отличная ретро-атмосфера, финал шикарный!</p>
-          </div>
+        {token && savedReview && (
+          <article className="film-review">
+            <div className="film-review-content">
+              <h3>{username || 'Ваш отзыв'}</h3>
+              <p>{savedReview}</p>
+            </div>
 
-          <Rate disabled count={5} value={5} />
-        </article>
-
-        <article className="film-review">
-          <div className="film-review-content">
-            <h3>Мария</h3>
-            <p>
-              Красивая грустная сказка, костюмы потрясающие. Но современный саундтрек местами
-              выбивал из атмосферы 20-х.
-            </p>
-          </div>
-
-          <Rate disabled count={5} value={4} />
-        </article>
+            <Rate disabled allowHalf count={5} value={rating / 2} />
+          </article>
+        )}
       </section>
     </div>
   )
