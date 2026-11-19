@@ -152,4 +152,48 @@ describe('Film page', () => {
     expect(await screen.findByText('Ошибка сервера')).toBeInTheDocument()
     expect(screen.getByRole('textbox')).toHaveValue('Хороший фильм')
   })
+  it('toggles bookmark on button click when user is authenticated', async () => {
+    const save = vi.spyOn(api, 'saveBookmark').mockResolvedValue(undefined)
+    const remove = vi.spyOn(api, 'deleteBookmark').mockResolvedValue(undefined)
+
+    const store = await renderFilm({
+      auth,
+      bookmarks: { bookmarks: [] },
+    })
+
+    const bookmarkBtn = screen.getByRole('button', { name: 'Добавить в закладки' })
+    expect(bookmarkBtn).toBeInTheDocument()
+
+    fireEvent.click(bookmarkBtn)
+
+    await waitFor(() => {
+      expect(save).toHaveBeenCalledWith('test-token', 1)
+      expect(store.getState().bookmarks.bookmarks).toContain(1)
+      expect(screen.getByRole('button', { name: 'Удалить из закладок' })).toBeInTheDocument()
+    })
+
+    fireEvent.click(bookmarkBtn)
+
+    await waitFor(() => {
+      expect(remove).toHaveBeenCalledWith('test-token', 1)
+      expect(store.getState().bookmarks.bookmarks).not.toContain(1)
+      expect(screen.getByRole('button', { name: 'Добавить в закладки' })).toBeInTheDocument()
+    })
+  })
+  it('saves bookmark only locally when user is not authenticated', async () => {
+    const save = vi.spyOn(api, 'saveBookmark')
+
+    const store = await renderFilm({
+      auth: { token: null, username: null },
+      bookmarks: { bookmarks: [] },
+    })
+
+    const bookmarkBtn = screen.getByRole('button', { name: 'Добавить в закладки' })
+    fireEvent.click(bookmarkBtn)
+
+    await waitFor(() => {
+      expect(store.getState().bookmarks.bookmarks).toContain(1)
+      expect(save).not.toHaveBeenCalled()
+    })
+  })
 })

@@ -93,3 +93,24 @@ export async function deleteRating(token: string, movieId: number) {
   })
   await checkError(response)
 }
+export async function saveBookmark(token: string, movieId: number) {
+  const response = await fetch(`/api/bookmarks/${movieId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  await checkError(response)
+}
+export async function deleteBookmark(token: string, movieId: number) {
+  const response = await fetch(`/api/bookmarks/${movieId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  await checkError(response)
+}
+export async function getBookmarks(token: string): Promise<number[]> {
+  const response = await fetch('/api/bookmarks', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  await checkError(response)
+  return response.json()
+}
