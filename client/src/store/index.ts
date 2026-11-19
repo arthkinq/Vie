@@ -4,8 +4,9 @@ import auth from './authSlice'
 import movies from './moviesSlice'
 import ratings from './ratingsSlice'
 import reviews from './reviewsSlice'
+import bookmarks from './bookmarksSlice'
 
-const reducer = combineReducers({ movies, ratings, auth, reviews })
+const reducer = combineReducers({ movies, ratings, auth, reviews, bookmarks })
 
 export function setupStore(preloadedState?: Partial<RootState>) {
   return configureStore({ reducer, preloadedState })
