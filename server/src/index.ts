@@ -89,7 +89,7 @@ app.get("/api/bookmarks", requireAuth, (_req, res) => {
     .all(res.locals.userId);
   res.json(bookmarks);
 });
-app.put("api/bookmarks/:movieId", requireAuth, (req, res) => {
+app.put("/api/bookmarks/:movieId", requireAuth, (req, res) => {
   const movieId = Number(req.params.movieId);
   if (!db.prepare("SELECT id FROM movies WHERE id = ?").get(movieId)) {
     res.status(404).json({ error: "Фильм не найден" });
@@ -102,7 +102,7 @@ app.put("api/bookmarks/:movieId", requireAuth, (req, res) => {
   res.status(204).end();
 });
 
-app.delete("api/bookmarks/:movieId", requireAuth, (req, res) => {
+app.delete("/api/bookmarks/:movieId", requireAuth, (req, res) => {
   db.prepare("DELETE FROM bookmarks WHERE user_id = ? AND movie_id = ?").run(
     res.locals.userId,
     Number(req.params.movieId),
