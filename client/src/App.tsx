@@ -50,13 +50,12 @@ export default function App() {
       active = false
     }
   }, [token, dispatch])
-  ;(useEffect(() => {
+  useEffect(() => {
     if (!token) {
       return
     }
     getBookmarks(token).then((items) => dispatch(setBookmarks(items)))
-  }),
-    [token, dispatch])
+  }, [token, dispatch])
 
   return (
     <>
