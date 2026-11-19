@@ -101,6 +101,15 @@ app.put("api/bookmarks/:movieId", requireAuth, (req, res) => {
   );
   res.status(204).end();
 });
+
+app.delete("api/bookmarks/:movieId", requireAuth, (req, res) => {
+  db.prepare("DELETE FROM bookmarks WHERE user_id = ? AND movie_id = ?").run(
+    res.locals.userId,
+    Number(req.params.movieId),
+  );
+  res.status(204).end();
+});
+
 app.put("/api/ratings/:movieId", requireAuth, (req, res) => {
   const movieId = Number(req.params.movieId);
   const { value } = req.body ?? {};
