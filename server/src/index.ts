@@ -86,8 +86,8 @@ app.get("/api/ratings", requireAuth, (_req, res) => {
 app.get("/api/bookmarks", requireAuth, (_req, res) => {
   const bookmarks = db
     .prepare("SELECT movie_id AS movieId FROM bookmarks WHERE user_id = ?")
-    .all(res.locals.userId);
-  res.json(bookmarks);
+    .all(res.locals.userId) as { movieId: number }[];
+  res.json(bookmarks.map((bm) => bm.movieId));
 });
 app.put("/api/bookmarks/:movieId", requireAuth, (req, res) => {
   const movieId = Number(req.params.movieId);

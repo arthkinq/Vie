@@ -27,9 +27,14 @@ const bookmarksSlice = createSlice({
       } else {
         state.bookmarks.push(movieId)
       }
+      localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks))
+    },
+    setBookmarks(state, action: PayloadAction<number[]>) {
+      state.bookmarks = action.payload
+      localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks))
     },
   },
 })
 
-export const { changeBookmark } = bookmarksSlice.actions
+export const { changeBookmark, setBookmarks } = bookmarksSlice.actions
 export default bookmarksSlice.reducer

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
-import { getRatings } from './api'
+import { getBookmarks, getRatings } from './api'
+import { setBookmarks } from './store/bookmarksSlice'
 import Header from './components/Header'
 import About from './pages/About'
 import Film from './pages/Film'
@@ -49,6 +50,13 @@ export default function App() {
       active = false
     }
   }, [token, dispatch])
+  ;(useEffect(() => {
+    if (!token) {
+      return
+    }
+    getBookmarks(token).then((items) => dispatch(setBookmarks(items)))
+  }),
+    [token, dispatch])
 
   return (
     <>

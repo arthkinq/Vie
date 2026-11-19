@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, message, Rate, Spin } from 'antd'
 import { useParams } from 'react-router'
-import { deleteRating, saveRating } from '../api'
+import { deleteBookmark, deleteRating, saveBookmark, saveRating } from '../api'
 import { useAppDispatch, useAppSelector, useAppStore } from '../store'
 import { setRating } from '../store/ratingsSlice'
 import { setReview } from '../store/reviewsSlice'
@@ -109,6 +109,21 @@ function FilmContent({ id }: { id: number }) {
     }
   }
 
+  const handleBookmark = async () => {
+    dispatch(changeBookmark(id))
+    if (token) {
+      try {
+        if (isBookmarked) {
+          await deleteBookmark(token, id)
+        } else {
+          await saveBookmark(token, id)
+        }
+      } catch {
+        console.error('Не удалось синхронизировать закладку с сервером')
+      }
+    }
+  }
+
   return (
     <div className="film-page">
       {contextHolder}
@@ -133,7 +148,7 @@ function FilmContent({ id }: { id: number }) {
             <Button
               type="text"
               className="film-bookmark"
-              onClick={() => dispatch(changeBookmark(id))}
+              onClick={handleBookmark}
               aria-label={isBookmarked ? 'Удалить из закладок' : 'Добавить в закладки'}
               icon={
                 <svg

@@ -99,7 +99,6 @@ export async function saveBookmark(token: string, movieId: number) {
     headers: { Authorization: `Bearer ${token}` },
   })
   await checkError(response)
-  return response.json()
 }
 export async function deleteBookmark(token: string, movieId: number) {
   const response = await fetch(`/api/bookmarks/${movieId}`, {
