@@ -27,8 +27,26 @@ export default function App() {
   }, [status, dispatch])
 
   useEffect(() => {
-    if (token) {
-      getRatings(token).then((items) => dispatch(setRatings(items)))
+    if (!token) {
+      return
+    }
+
+    let active = true
+
+    getRatings(token)
+      .then((items) => {
+        if (active) {
+          dispatch(setRatings(items))
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          console.error('Не удалось загрузить оценки', error)
+        }
+      })
+
+    return () => {
+      active = false
     }
   }, [token, dispatch])
 

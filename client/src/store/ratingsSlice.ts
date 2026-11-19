@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { Rating } from '../api'
+import { loggedIn, logout } from './authSlice'
 
 type RatingsState = Record<number, number>
 
@@ -24,6 +25,9 @@ const ratingsSlice = createSlice({
       }
       return next
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, () => ({})).addCase(loggedIn, () => ({}))
   },
 })
 
