@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Button, message, Rate, Spin } from 'antd'
 import { useParams } from 'react-router'
-import { deleteRating, saveRating } from '../api'
+import { deleteBookmark, deleteRating, saveBookmark, saveRating } from '../api'
 import { useAppDispatch, useAppSelector, useAppStore } from '../store'
 import { setRating } from '../store/ratingsSlice'
 import { setReview } from '../store/reviewsSlice'
+import { changeBookmark } from '../store/bookmarksSlice'
 import NotFound from './NotFound'
 import './Film.css'
 
@@ -25,6 +26,7 @@ function FilmContent({ id }: { id: number }) {
   const savedReview = useAppSelector((state) => state.reviews[id])
   const username = useAppSelector((state) => state.auth.username)
   const token = useAppSelector((state) => state.auth.token)
+  const isBookmarked = useAppSelector((state) => state.bookmarks.bookmarks.includes(id))
 
   const [reviewText, setReviewText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -107,6 +109,22 @@ function FilmContent({ id }: { id: number }) {
     }
   }
 
+  const handleBookmark = async () => {
+    dispatch(changeBookmark(id))
+    if (token) {
+      try {
+        if (isBookmarked) {
+          await deleteBookmark(token, id)
+        } else {
+          await saveBookmark(token, id)
+        }
+      } catch {
+        dispatch(changeBookmark(id))
+        messageApi.error('Не удалось изменить закладку. Попробуйте ещё раз.')
+      }
+    }
+  }
+
   return (
     <div className="film-page">
       {contextHolder}
@@ -128,11 +146,24 @@ function FilmContent({ id }: { id: number }) {
           <div className="film-title-row">
             <h1 className="film-title">{movie.title}</h1>
 
-            <span className="film-bookmark" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M6 3h12v18l-6-4-6 4V3Z" />
-              </svg>
-            </span>
+            <Button
+              type="text"
+              className="film-bookmark"
+              onClick={handleBookmark}
+              aria-label={isBookmarked ? 'Удалить из закладок' : 'Добавить в закладки'}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill={isBookmarked ? 'currentColor' : 'none'}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M6 3h12v18l-6-4-6 4V3Z" />
+                </svg>
+              }
+            />
           </div>
 
           <div className="film-overall-rating">

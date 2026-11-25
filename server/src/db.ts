@@ -55,6 +55,12 @@ db.exec(`
     review TEXT,
     PRIMARY KEY (user_id, movie_id)
   );
+  
+  CREATE TABLE IF NOT EXISTS bookmarks (
+    user_id INTEGER NOT NULL REFERENCES users (id),
+    movie_id INTEGER NOT NULL REFERENCES movies (id),
+    PRIMARY KEY (user_id, movie_id)
+  );
 `)
 
 const saveMovie = db.prepare('INSERT OR REPLACE INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')

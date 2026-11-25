@@ -1,11 +1,67 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { deleteRating, getRatings, login, register, saveRating } from './api'
+import {
+  deleteBookmark,
+  deleteRating,
+  getBookmarks,
+  getRatings,
+  login,
+  register,
+  saveBookmark,
+  saveRating,
+} from './api'
 
 afterEach(() => {
   vi.unstubAllGlobals()
 })
 
 describe('api', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+  it('saveBookmark sends PUT request with movieId and auth token', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await saveBookmark('test-token', 666)
+    expect(fetchMock).toHaveBeenCalledWith('/api/bookmarks/666', {
+      method: 'PUT',
+      headers: { Authorization: 'Bearer test-token' },
+    })
+  })
+  it('deleteBookmark sends DELETE request with movieId and auth token', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await deleteBookmark('test-token', 666)
+    expect(fetchMock).toHaveBeenCalledWith('/api/bookmarks/666', {
+      method: 'DELETE',
+      headers: { Authorization: 'Bearer test-token' },
+    })
+  })
+  it('getBookmarks sends GET request with auth token and returns array', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [1, 2, 3],
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    const result = await getBookmarks('test-token')
+    expect(result).toEqual([1, 2, 3])
+    expect(fetchMock).toHaveBeenCalledWith('/api/bookmarks', {
+      headers: { Authorization: 'Bearer test-token' },
+    })
+  })
+  it('throws an error if server responds with error status', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ error: 'Сессия истекла' }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await expect(getBookmarks('bad-token')).rejects.toThrow('Сессия истекла')
+  })
   it('sends login and register requests', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

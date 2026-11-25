@@ -46,16 +46,13 @@
   gap: 12px;
 }
 
-.film-bookmark {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
+.film-title-row button.ant-btn.film-bookmark svg {
   color: #fff9ad;
 }
 
-.film-bookmark svg {
-  width: 22px;
-  height: 22px;
+.film-title-row button.ant-btn.film-bookmark:hover svg {
+  transform: scale(1.1);
+  color: #fadb14;
 }
 
 .film-title {

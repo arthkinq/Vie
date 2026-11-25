@@ -68,3 +68,44 @@ test('does not give ratings without a token', async () => {
   const res = await fetch(`${url}/ratings`)
   assert.equal(res.status, 401)
 })
+
+
+test('adds, gets and deletes bookmarks for authorized user', async () => {
+  const user = { username: 'arthur', mail: 'arthur@mail.ru', password: 'Password123' }
+  await send('POST', '/auth/register', user)
+
+  const login = await send('POST', '/auth/login', {
+    login: 'arthur@mail.ru',
+    password: 'Password123',
+  })
+  const { token } = await login.json()
+
+  const addRes = await send('PUT', '/bookmarks/1', undefined, token)
+  assert.equal(addRes.status, 204)
+
+  const getRes = await send('GET', '/bookmarks', undefined, token)
+  assert.equal(getRes.status, 200)
+  assert.deepEqual(await getRes.json(), [1])
+
+  const delRes = await send('DELETE', '/bookmarks/1', undefined, token)
+  assert.equal(delRes.status, 204)
+
+  const getEmptyRes = await send('GET', '/bookmarks', undefined, token)
+  assert.deepEqual(await getEmptyRes.json(), [])
+})
+
+test('does not give bookmarks without a token', async () => {
+  const res = await fetch(`${url}/bookmarks`)
+  assert.equal(res.status, 401)
+})
+
+test('returns 404 when bookmarking non-existent movie', async () => {
+  const user = { username: 'arthur', mail: 'arthur@mail.ru', password: 'Password123' }
+  await send('POST', '/auth/register', user)
+  const login = await send('POST', '/auth/login', { login: 'arthur@mail.ru', password: 'Password123' })
+  const { token } = await login.json()
+
+  const res = await send('PUT', '/bookmarks/99999', undefined, token)
+  assert.equal(res.status, 404)
+  assert.deepEqual(await res.json(), { error: 'Фильм не найден' })
+})

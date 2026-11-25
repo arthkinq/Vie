@@ -96,6 +96,33 @@ app.delete('/api/ratings/:movieId', requireAuth, (req, res) => {
   )
   res.status(204).end()
 })
+app.get('/api/bookmarks', requireAuth, (_req, res) => {
+  const bookmarks = db
+    .prepare('SELECT movie_id AS movieId FROM bookmarks WHERE user_id = ?')
+    .all(res.locals.userId) as { movieId: number }[]
+  res.json(bookmarks.map((b) => b.movieId))
+})
+
+app.put('/api/bookmarks/:movieId', requireAuth, (req, res) => {
+  const movieId = Number(req.params.movieId)
+  if (!db.prepare('SELECT id FROM movies WHERE id = ?').get(movieId)) {
+    res.status(404).json({ error: 'Фильм не найден' })
+    return
+  }
+  db.prepare('INSERT OR REPLACE INTO bookmarks VALUES (?, ?)').run(
+    res.locals.userId,
+    movieId,
+  )
+  res.status(204).end()
+})
+
+app.delete('/api/bookmarks/:movieId', requireAuth, (req, res) => {
+  db.prepare('DELETE FROM bookmarks WHERE user_id = ? AND movie_id = ?').run(
+    res.locals.userId,
+    Number(req.params.movieId),
+  )
+  res.status(204).end()
+})
 
 if (import.meta.main) {
   app.listen(port, () => {
