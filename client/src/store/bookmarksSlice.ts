@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-
+import { logout } from './authSlice'
 export type BookmarksStorage = {
   bookmarks: number[]
 }
@@ -30,9 +30,15 @@ const bookmarksSlice = createSlice({
       localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks))
     },
     setBookmarks(state, action: PayloadAction<number[]>) {
-      state.bookmarks = action.payload
+      state.bookmarks = Array.from(new Set([...state.bookmarks, ...action.payload]))
       localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks))
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, (state) => {
+      state.bookmarks = []
+      localStorage.removeItem('bookmarks')
+    })
   },
 })
 

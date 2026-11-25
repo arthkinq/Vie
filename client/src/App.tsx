@@ -54,7 +54,24 @@ export default function App() {
     if (!token) {
       return
     }
-    getBookmarks(token).then((items) => dispatch(setBookmarks(items)))
+
+    let active = true
+
+    getBookmarks(token)
+      .then((items) => {
+        if (active) {
+          dispatch(setBookmarks(items))
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          console.error('Не удалось загрузить закладки', error)
+        }
+      })
+
+    return () => {
+      active = false
+    }
   }, [token, dispatch])
 
   return (

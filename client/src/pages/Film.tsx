@@ -119,7 +119,8 @@ function FilmContent({ id }: { id: number }) {
           await saveBookmark(token, id)
         }
       } catch {
-        console.error('Не удалось синхронизировать закладку с сервером')
+        dispatch(changeBookmark(id))
+        messageApi.error('Не удалось изменить закладку. Попробуйте ещё раз.')
       }
     }
   }
