@@ -1,32 +1,32 @@
-import { DatabaseSync } from "node:sqlite";
-import movies from "../data/movies.json" with { type: "json" };
+import { DatabaseSync } from 'node:sqlite'
+import movies from '../data/movies.json' with { type: 'json' }
 
 export type Movie = {
-  id: number;
-  title: string;
-  year: number;
-  genres: string[];
-  countries: string[];
-  director: string;
-  rating: number;
-  description: string;
-  poster?: string;
-};
+  id: number
+  title: string
+  year: number
+  genres: string[]
+  countries: string[]
+  director: string
+  rating: number
+  description: string
+  poster?: string
+}
 
-export type MovieRow = Omit<Movie, "genres" | "countries" | "poster"> & {
-  genres: string;
-  countries: string;
-  poster: string | null;
-};
+export type MovieRow = Omit<Movie, 'genres' | 'countries' | 'poster'> & {
+  genres: string
+  countries: string
+  poster: string | null
+}
 
 export type User = {
-  id: number;
-  username: string;
-  mail: string;
-  password: string;
-};
+  id: number
+  username: string
+  mail: string
+  password: string
+}
 
-export const db = new DatabaseSync(process.env.DB_PATH || "vie.db");
+export const db = new DatabaseSync(process.env.DB_PATH || 'vie.db')
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS movies (
@@ -55,17 +55,15 @@ db.exec(`
     review TEXT,
     PRIMARY KEY (user_id, movie_id)
   );
-
+  
   CREATE TABLE IF NOT EXISTS bookmarks (
     user_id INTEGER NOT NULL REFERENCES users (id),
     movie_id INTEGER NOT NULL REFERENCES movies (id),
     PRIMARY KEY (user_id, movie_id)
   );
-`);
+`)
 
-const saveMovie = db.prepare(
-  "INSERT OR REPLACE INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-);
+const saveMovie = db.prepare('INSERT OR REPLACE INTO movies VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
 
 for (const movie of movies as Movie[]) {
   saveMovie.run(
@@ -78,7 +76,7 @@ for (const movie of movies as Movie[]) {
     movie.rating,
     movie.description,
     movie.poster ?? null,
-  );
+  )
 }
 
 export function toMovie(row: MovieRow): Movie {
@@ -87,5 +85,5 @@ export function toMovie(row: MovieRow): Movie {
     genres: JSON.parse(row.genres),
     countries: JSON.parse(row.countries),
     poster: row.poster ? `/api/posters/${row.poster}` : undefined,
-  };
+  }
 }
